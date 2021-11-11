@@ -3,17 +3,17 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {buttonTextColor, colorFont} from '../constants/style';
 
-const Button = ({iconName, children, ...props}) => {
+const Button = ({iconName, children, buttonStyle, textStyle, ...props}) => {
   return (
     <ButtonContainer>
-      <ButtonPress {...props}>
+      <ButtonPress style={buttonStyle} {...props}>
         <Icon
           style={{paddingRight: 10}}
           name={iconName}
           size={70}
           color={colorFont}
         />
-        <ButtonText>{children}</ButtonText>
+        <ButtonText style={textStyle}>{children}</ButtonText>
       </ButtonPress>
     </ButtonContainer>
   );
