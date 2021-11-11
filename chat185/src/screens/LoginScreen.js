@@ -15,7 +15,9 @@ const LoginScreen = () => {
       <TextInput secureTextEntry placeholder="Введіть пароль ..." />
       <Button iconName="vpn-key">Ввійти</Button>
       <RegisterContainer>
-        <RegisterText>Досі не маєте власного аккаунта ?</RegisterText>
+        <RegisterText>
+          Досі не маєте <SelectText>власного аккаунта</SelectText> ?
+        </RegisterText>
         <RegisterPress>
           <Icon
             name="account-multiple-plus-outline"
@@ -27,6 +29,10 @@ const LoginScreen = () => {
     </LoginContainer>
   );
 };
+
+const SelectText = styled.Text`
+  font-weight: 900;
+`;
 
 const RegisterPress = styled.TouchableOpacity``;
 
