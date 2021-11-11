@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {buttonTextColor, colorFont} from '../constants/style';
 
-const Button = ({iconName, children}) => {
+const Button = ({iconName, children, ...props}) => {
   return (
     <ButtonContainer>
-      <ButtonPress>
+      <ButtonPress {...props}>
         <Icon
           style={{paddingRight: 10}}
           name={iconName}
@@ -24,6 +24,7 @@ const ButtonContainer = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  padding-bottom: 15px;
 `;
 
 const ButtonPress = styled.TouchableOpacity`
