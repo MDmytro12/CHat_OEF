@@ -6,14 +6,16 @@ import {
   LoginScreen,
   RegistryScreen,
   SuccessScreen,
+  WaitScreen,
 } from './src/screens';
+import AccountRoute from './src/screens/AccountRoute';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Registry">
+      <Stack.Navigator initialRouteName="AccountRoute">
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -32,6 +34,16 @@ function App() {
         <Stack.Screen
           name="Registry"
           component={RegistryScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Wait"
+          component={WaitScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AccountRoute"
+          component={AccountRoute}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
