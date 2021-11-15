@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {colorFont, onlineColor} from '../constants/style';
+import {colorFont, errorColor, onlineColor} from '../constants/style';
 import {MenuItem} from '.';
 
-const DrawerContent = () => {
+const DrawerContent = ({props: {navigation}}) => {
   const MenuItemsInfo = [
     {
       itemName: 'Діалоги',
@@ -16,16 +16,23 @@ const DrawerContent = () => {
     },
   ];
 
+  const ArrowHndler = () => {
+    navigation.closeDrawer();
+  };
+
   return (
     <DCWrapper>
       <DCContainer>
-        <ABContainer>
+        <ABContainer onPress={ArrowHndler}>
           <Icon name="arrow-back" size={60} color={colorFont} />
         </ABContainer>
         <AvatarImageContainer>
           <AvatarImage source={require('../assets/img/anonym.png')} />
           <OIConatainer>
-            <Icon name="offline-bolt" size={25} color={onlineColor} />
+            {false && (
+              <Icon name="offline-bolt" size={25} color={onlineColor} />
+            )}
+            {true && <Icon name="not-started" size={25} color={errorColor} />}
           </OIConatainer>
         </AvatarImageContainer>
 

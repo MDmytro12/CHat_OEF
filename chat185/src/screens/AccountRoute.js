@@ -16,9 +16,10 @@ const AccountRoute = () => {
         },
         drawerPosition: 'right',
         drawerStatusBarAnimation: 'slide',
+        headerShown: false,
       }}
       drawerContent={props => {
-        return <DrawerContent />;
+        return <DrawerContent props={props} />;
       }}
       initialRouteName="DialogItem">
       <Drawer.Screen name="DialogItem" component={DialogItemsScreen} />
