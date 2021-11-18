@@ -9,9 +9,14 @@ const ChatRoomScreen = ({navigation}) => {
         name={'Петро Петров Петровиcdscscscscч'}
         image={require('../assets/img/anonym.png')}
       />
+      <CMC></CMC>
     </CRContainer>
   );
 };
+
+const CMC = styled.ScrollView`
+  background-color: red;
+`;
 
 const CRContainer = styled.View`
   width: 100%;
