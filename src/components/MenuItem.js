@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const MenuItem = ({itemName, iconName, children, ...props}) => {
   return (
-    <MIWrapper>
+    <MIWrapper onPress={props.onPress}>
       <Icon name={iconName} size={35} color={colorFont} />
       <ItemText>{itemName}</ItemText>
     </MIWrapper>

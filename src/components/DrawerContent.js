@@ -9,10 +9,14 @@ const DrawerContent = ({props: {navigation}}) => {
     {
       itemName: 'Діалоги',
       iconName: 'chat-bubble-outline',
+      onPress: () => {
+        navigation.navigate('DialogItem');
+      },
     },
     {
       itemName: 'Покинути чат',
       iconName: 'exit-to-app',
+      onPress: () => alert('Exit!'),
     },
   ];
 

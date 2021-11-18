@@ -106,7 +106,7 @@ const DialogItemsScreen = ({navigation}) => {
   ];
 
   const DialogItemHandler = loginData => {
-    navigation.navigate('');
+    navigation.navigate('ChatRoom');
   };
 
   return (
