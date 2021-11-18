@@ -5,3 +5,4 @@ export {default as DrawerContent} from './DrawerContent';
 export {default as MenuItem} from './MenuItem';
 export {default as DialogItem} from './DialogItem';
 export {default as ChatHeader} from './ChatHeader';
+export {default as FooterChat} from './ChatFooter';

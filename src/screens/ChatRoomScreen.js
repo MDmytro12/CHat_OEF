@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {ChatHeader} from '../components';
+import {ChatHeader, FooterChat} from '../components';
 
 const ChatRoomScreen = ({navigation}) => {
   return (
@@ -10,6 +10,8 @@ const ChatRoomScreen = ({navigation}) => {
         image={require('../assets/img/anonym.png')}
       />
       <CMC></CMC>
+
+      <FooterChat />
     </CRContainer>
   );
 };

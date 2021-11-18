@@ -77,7 +77,7 @@ const CHC = styled.View`
   padding-left: 10px;
   padding-right: 10px;
   width: 100%;
-  height: 10%;
+  height: 60px;
   background-color: ${backColor};
   display: flex;
   flex-direction: row;
