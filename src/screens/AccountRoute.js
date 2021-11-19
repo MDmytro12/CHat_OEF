@@ -3,6 +3,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import DialogItemsScreen from './DialogItemsScreen';
 import {DrawerContent} from '../components';
 import ChatRoomScreen from './ChatRoomScreen';
+import FindUserScreen from './FindUserScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,6 +26,7 @@ const AccountRoute = () => {
       initialRouteName="DialogItem">
       <Drawer.Screen name="DialogItem" component={DialogItemsScreen} />
       <Drawer.Screen name="ChatRoom" component={ChatRoomScreen} />
+      <Drawer.Screen name="FindUser" component={FindUserScreen} />
     </Drawer.Navigator>
   );
 };

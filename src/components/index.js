@@ -10,3 +10,4 @@ export {default as Message} from './Message';
 export {default as MessageDocument} from './MessageDocument';
 export {default as MessageAudio} from './AudioMessage';
 export {default as MessageImage} from './ImageMessage';
+export {default as SearchUser} from './SearchUser';

@@ -18,7 +18,7 @@ const InputWrapper = styled.View`
 `;
 
 const InputText = styled.TextInput`
-  width: 60%;
+  width: 80%;
   text-align: center;
   color: ${colorFont};
   font-size: 20px;
