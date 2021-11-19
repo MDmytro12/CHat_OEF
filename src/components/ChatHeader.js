@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import {backColor, colorFont, errorColor} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ChatHeader = ({image, name}) => {
+const ChatHeader = ({image, name, children, onPress}) => {
   return (
     <CHC>
+      {children}
       <AIC>
         <AI source={image} />
         <IC>
@@ -20,7 +21,7 @@ const ChatHeader = ({image, name}) => {
           21.12.2021
         </Time>
       </InC>
-      <AC>
+      <AC onPress={onPress}>
         <Icon name="library-add" size={35} color={colorFont} />
       </AC>
     </CHC>
@@ -83,6 +84,7 @@ const CHC = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 `;
 
 export default ChatHeader;

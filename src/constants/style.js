@@ -9,3 +9,5 @@ export const inputColor = '#FCFCFC';
 export const avatarBackColor = 'rgba(161 , 170 , 166 , .29)';
 export const borderColor = 'rgba(0,0,0,.18)';
 export const dateColor = 'rgba(0,0,0,.25)';
+export const meBackColor = 'rgba(219,221,220,.29)';
+export const notMeBackColor = 'rgba(170,248,215,.29)';
