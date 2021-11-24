@@ -4,7 +4,14 @@ import {LogoTitle} from '../components';
 import {backColor, errorColor} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ErrorScreen = () => {
+const ErrorScreen = ({navigation, route}) => {
+  React.useEffect(() => {
+    let {prevScreen} = route.params;
+    setTimeout(() => {
+      navigation.navigate(prevScreen);
+    }, 5000);
+  }, []);
+
   return (
     <ErrorContainer>
       <LogoTitle />
@@ -16,7 +23,7 @@ const ErrorScreen = () => {
           color={errorColor}
         />
         <ErrorText>
-          Під час авторизації сталася <ErrorSelected>помилка</ErrorSelected>...
+          {route.params.text} <ErrorSelected>помилка</ErrorSelected>...
         </ErrorText>
       </InfoContainer>
     </ErrorContainer>

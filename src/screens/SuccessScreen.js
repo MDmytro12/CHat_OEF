@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import {LogoTitle} from '../components';
 import {backColor, errorColor, successColor} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const SuccessScreen = () => {
+const SuccessScreen = ({navigation, route}) => {
+  useEffect(() => {
+    let {prevScreen} = route.params;
+    setTimeout(() => {
+      navigation.navigate(prevScreen);
+    }, 5000);
+  }, []);
+
   return (
     <SuccessContainer>
       <LogoTitle />
@@ -16,7 +23,7 @@ const SuccessScreen = () => {
           color={successColor}
         />
         <SuccessText>
-          Авторизація пройшла <SuccessSelected>успішно</SuccessSelected>...
+          {route.params.text} <SuccessSelected>успішно</SuccessSelected>...
         </SuccessText>
       </InfoContainer>
     </SuccessContainer>

@@ -6,19 +6,87 @@ import {colorFont} from '../constants/style';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const LoginScreen = () => {
+import {connect} from 'react-redux';
+import {aLogin} from '../actions/auth';
+
+import {ActivityIndicator, Spinner} from 'react-native';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch,
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    ...state,
+  };
+};
+
+const LoginView = ({navigation, dispatch}) => {
+  const [loginData, setLoginData] = React.useState({
+    login: '',
+    password: '',
+  });
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const onLoginHandler = () => {
+    if (loginData.password.length === 0 || loginData.login.length === 0) {
+      alert('Не залишайте поля пустими!');
+      return;
+    }
+
+    if (loginData.login.length < 7 || loginData.password.length < 7) {
+      alert('Кількість символів в полі повинна бути більшою 7-ми!');
+      return;
+    }
+    setIsLoading(true);
+    dispatch(
+      aLogin({
+        ...loginData,
+        navigation,
+      }),
+    );
+
+    setLoginData({
+      login: '',
+      password: '',
+    });
+
+    setIsLoading(false);
+  };
+
   return (
     <LoginContainer>
       <LogoTitle />
       <LoginTitle>Вхід</LoginTitle>
-      <TextInput placeholder="Введіть ід ..." />
-      <TextInput secureTextEntry placeholder="Введіть пароль ..." />
-      <Button iconName="vpn-key">Ввійти</Button>
+      <TextInput
+        value={loginData.login}
+        onChangeText={textValue =>
+          setLoginData({...loginData, login: textValue})
+        }
+        placeholder="Введіть логін ..."
+      />
+      <TextInput
+        onChangeText={textValue =>
+          setLoginData({...loginData, password: textValue})
+        }
+        value={loginData.password}
+        secureTextEntry
+        placeholder="Введіть пароль ..."
+      />
+      {isLoading && <ActivityIndicator size="large" color={colorFont} />}
+      {!isLoading && (
+        <Button onPress={onLoginHandler} iconName="vpn-key">
+          Ввійти
+        </Button>
+      )}
+
       <RegisterContainer>
         <RegisterText>
           Досі не маєте <SelectText>власного аккаунта</SelectText> ?
         </RegisterText>
-        <RegisterPress>
+        <RegisterPress onPress={() => navigation.navigate('Registry')}>
           <Icon
             name="account-multiple-plus-outline"
             size={60}
@@ -65,5 +133,7 @@ const LoginContainer = styled.ScrollView`
   height: 100%;
   background-color: rgba(170, 248, 215, 0.62);
 `;
+
+const LoginScreen = connect(mapStateToProps, mapDispatchToProps)(LoginView);
 
 export default LoginScreen;

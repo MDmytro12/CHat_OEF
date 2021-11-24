@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {DialogItem} from '../components';
 import {format} from 'date-fns';
 import Swipeable from 'react-native-swipeable';
-import {TouchableOpacity} from 'react-native';
+import {RefreshControl, TouchableOpacity} from 'react-native';
 
 const DialogItemInfo = [
   {
@@ -106,6 +106,7 @@ const DialogItemsScreen = ({navigation}) => {
   const textInputRef = useRef(null);
   const [DIlist, setDIlist] = useState(DialogItemInfo);
   const [SIlist, setSIlist] = useState(DialogItemInfo);
+  const [refreshing, setRefreshing] = useState(false);
 
   const DialogItemHandler = loginData => {
     navigation.navigate('ChatRoom');
@@ -113,6 +114,10 @@ const DialogItemsScreen = ({navigation}) => {
 
   const onFindUserHandler = () => {
     navigation.navigate('FindUser');
+  };
+
+  const onRefreshHandler = () => {
+    alert('Refresh!');
   };
 
   const onTextChangeHandler = textValue => {
@@ -139,7 +144,14 @@ const DialogItemsScreen = ({navigation}) => {
         </DIEC>
       )}
       {DIlist.length !== 0 && (
-        <DIContainer>
+        <DIContainer
+          refreshControl={
+            <RefreshControl
+              onRefresh={onRefreshHandler}
+              refreshing={refreshing}
+              color={backColor}
+            />
+          }>
           {DIlist.map((item, index) => (
             <Swipeable
               key={index * 122}
