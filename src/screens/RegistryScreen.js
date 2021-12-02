@@ -9,6 +9,7 @@ import {backColor, colorFont} from '../constants/style';
 const mapStateToProps = state => {
   return {
     ...state,
+    isLoading: state.auth.isLoading,
   };
 };
 
@@ -18,14 +19,13 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const RegistryView = ({navigation, dispatch}) => {
+const RegistryView = ({navigation, dispatch, isLoading}) => {
   const [registerData, setRegisterData] = React.useState({
     name: '',
     login: '',
     password: '',
     passwordAgain: '',
   });
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const onRegisterHandler = () => {
     if (
@@ -53,8 +53,6 @@ const RegistryView = ({navigation, dispatch}) => {
       return;
     }
 
-    setIsLoading(true);
-
     dispatch(
       aRegister({
         login: registerData.login,
@@ -63,8 +61,6 @@ const RegistryView = ({navigation, dispatch}) => {
         navigation,
       }),
     );
-
-    setIsLoading(false);
 
     setRegisterData({
       login: '',

@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {aLogin} from '../actions/auth';
 
-import {ActivityIndicator, Spinner} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -19,16 +19,15 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    ...state,
+    isLoading: state.auth.isLoading,
   };
 };
 
-const LoginView = ({navigation, dispatch}) => {
+const LoginView = ({navigation, dispatch, isLoading}) => {
   const [loginData, setLoginData] = React.useState({
     login: '',
     password: '',
   });
-  const [isLoading, setIsLoading] = React.useState(false);
 
   const onLoginHandler = () => {
     if (loginData.password.length === 0 || loginData.login.length === 0) {
@@ -40,7 +39,7 @@ const LoginView = ({navigation, dispatch}) => {
       alert('Кількість символів в полі повинна бути більшою 7-ми!');
       return;
     }
-    setIsLoading(true);
+
     dispatch(
       aLogin({
         ...loginData,
@@ -52,8 +51,6 @@ const LoginView = ({navigation, dispatch}) => {
       login: '',
       password: '',
     });
-
-    setIsLoading(false);
   };
 
   return (
