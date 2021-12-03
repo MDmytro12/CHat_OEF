@@ -9,7 +9,7 @@ import {
   WaitScreen,
 } from './src/screens';
 import AccountRoute from './src/screens/AccountRoute';
-import {connect, Provider} from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './src/store';
 
 const Stack = createNativeStackNavigator();

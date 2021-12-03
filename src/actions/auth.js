@@ -39,3 +39,5 @@ export const aRegister = ({login, username, password, navigation}) => {
 export const aRegisterError = () => ({type: AUTH_REGISTER_ERROR});
 
 export const aRegisterSuccess = () => ({type: AUTH_REGISTER_SUCCESS});
+
+export const aExit = () => ({type: USER_EXIT});

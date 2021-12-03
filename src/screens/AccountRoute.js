@@ -4,10 +4,22 @@ import DialogItemsScreen from './DialogItemsScreen';
 import {DrawerContent} from '../components';
 import ChatRoomScreen from './ChatRoomScreen';
 import FindUserScreen from './FindUserScreen';
+import {useDispatch, useStore} from 'react-redux';
+import {getUserAvatar, getUserInfo} from '../actions/user';
 
 const Drawer = createDrawerNavigator();
 
 const AccountRoute = () => {
+  const store = useStore();
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    let userId = store.getState().user.userId;
+    let token = store.getState().user.token;
+    dispatch(getUserInfo(userId, token));
+    dispatch(getUserAvatar(userId, token));
+  }, []);
+
   return (
     <Drawer.Navigator
       screenOptions={{

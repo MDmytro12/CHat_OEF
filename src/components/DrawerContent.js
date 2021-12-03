@@ -3,8 +3,15 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {colorFont, errorColor, onlineColor} from '../constants/style';
 import {MenuItem} from '.';
+import {useStore, useDispatch} from 'react-redux';
+import {ActivityIndicator} from 'react-native';
+import DocumentPicker from 'react-native-document-picker';
+import {changeUserAvatar, getUserAvatar, userExit} from '../actions/user';
 
 const DrawerContent = ({props: {navigation}}) => {
+  const store = useStore();
+  const dispatch = useDispatch();
+
   const MenuItemsInfo = [
     {
       itemName: 'Діалоги',
@@ -16,12 +23,39 @@ const DrawerContent = ({props: {navigation}}) => {
     {
       itemName: 'Покинути чат',
       iconName: 'exit-to-app',
-      onPress: () => alert('Exit!'),
+      onPress: () => {
+        dispatch(userExit());
+        navigation.navigate('Login');
+      },
     },
   ];
 
   const ArrowHndler = () => {
     navigation.closeDrawer();
+  };
+
+  const onImageChange = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+      });
+      dispatch(
+        changeUserAvatar(
+          store.getState().user.userId,
+          store.getState().user.token,
+          {
+            uri: result[0].uri,
+            type: result[0].type,
+            name: result[0].name,
+          },
+        ),
+      );
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        throw err;
+      }
+    }
   };
 
   return (
@@ -30,17 +64,32 @@ const DrawerContent = ({props: {navigation}}) => {
         <ABContainer onPress={ArrowHndler}>
           <Icon name="arrow-back" size={60} color={colorFont} />
         </ABContainer>
-        <AvatarImageContainer>
-          <AvatarImage source={require('../assets/img/anonym.png')} />
-          <OIConatainer>
-            {false && (
-              <Icon name="offline-bolt" size={25} color={onlineColor} />
-            )}
-            {true && <Icon name="not-started" size={25} color={errorColor} />}
-          </OIConatainer>
-        </AvatarImageContainer>
+        <AIW onPress={onImageChange}>
+          <AvatarImageContainer>
+            <AvatarImage
+              source={{
+                uri: store.getState().user.avatar,
+                cache: 'reload',
+              }}
+            />
+            <OIConatainer>
+              {false && (
+                <Icon name="offline-bolt" size={25} color={onlineColor} />
+              )}
+              {true && <Icon name="not-started" size={25} color={errorColor} />}
+            </OIConatainer>
+          </AvatarImageContainer>
+        </AIW>
 
-        <UserName>Іванов Іван Іванович</UserName>
+        {store.getState().user.username ? (
+          <UserName>{store.getState().user.username}</UserName>
+        ) : (
+          <ActivityIndicator
+            style={{paddingTop: 20}}
+            color={colorFont}
+            size="small"
+          />
+        )}
 
         <MIContainer>
           {MenuItemsInfo.map((item, index) => (
@@ -87,6 +136,8 @@ const OIConatainer = styled.View`
   align-items: center;
 `;
 
+const AIW = styled.TouchableOpacity``;
+
 const AvatarImageContainer = styled.View`
   position: relative;
 `;
@@ -94,7 +145,7 @@ const AvatarImageContainer = styled.View`
 const AvatarImage = styled.Image`
   width: 130px;
   height: 130px;
-  border-radius: 30px;
+  border-radius: 100px;
 `;
 
 const DCContainer = styled.View`

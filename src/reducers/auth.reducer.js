@@ -4,6 +4,7 @@ import {
   AUTH_PENDING,
   AUTH_REGISTER_ERROR,
   AUTH_REGISTER_SUCCESS,
+  USER_EXIT,
 } from '../constants/types';
 
 const initialState = {
@@ -39,6 +40,10 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+      };
+    case USER_EXIT:
+      return {
+        ...initialState,
       };
     default:
       return state;

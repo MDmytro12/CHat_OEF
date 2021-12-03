@@ -25,8 +25,8 @@ const mapStateToProps = state => {
 
 const LoginView = ({navigation, dispatch, isLoading}) => {
   const [loginData, setLoginData] = React.useState({
-    login: '',
-    password: '',
+    login: 'd21@gmail.com',
+    password: '11111111',
   });
 
   const onLoginHandler = () => {
