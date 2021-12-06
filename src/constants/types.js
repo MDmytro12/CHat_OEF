@@ -16,3 +16,19 @@ export const USER_GET_AVATAR = 'USER_GET_AVATAR';
 export const USER_SET_AVATAR = 'USER_SET_AVATAR';
 export const USER_CHANGE_AVATAR = 'USER_CHANGE_AVATAR';
 export const USER_EXIT = 'USER_EXIT';
+
+// search dialog
+
+export const SEARCH_PENDING = 'SEERCH_PENDING';
+export const SEARCH_ERROR = 'SEARCH_ERROR';
+export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
+export const FIND_USER_BY_ID = 'FIND_USER_BY_ID';
+export const SET_FINDED_DATA = 'SET_FINDED_DATA';
+
+// dialog
+
+export const CREATE_DIALOG = 'CREATE_DIALOG';
+export const SET_ALL_DIALOGS = 'SET_ALL_DIALOGS';
+export const DIALOG_PENDING = 'DIALOG_PENDING';
+export const DIALOG_SUCCESS = 'DIALOG_SUCCESS';
+export const DIALOG_ERROR = 'DIALOG_ERROR';
