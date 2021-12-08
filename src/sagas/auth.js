@@ -1,5 +1,5 @@
 import {takeEvery, put, call} from 'redux-saga/effects';
-import {AUTH_LOGIN, AUTH_PENDING, AUTH_REGISTER} from '../constants/types';
+import {AUTH_LOGIN, AUTH_REGISTER} from '../constants/types';
 import axios from 'axios';
 import {LINK_LOGIN, LINK_REGISTER} from '../constants/links';
 import {
