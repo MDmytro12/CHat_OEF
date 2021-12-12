@@ -1,5 +1,6 @@
 import {
   FIND_USER_BY_ID,
+  SEARCH_CLEAR_DATA,
   SEARCH_ERROR,
   SEARCH_PENDING,
   SEARCH_SUCCESS,
@@ -21,3 +22,5 @@ export const setSearchData = data => ({
   type: SET_FINDED_DATA,
   payload: {...data},
 });
+
+export const clearSearchData = () => ({type: SEARCH_CLEAR_DATA});

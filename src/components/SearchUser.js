@@ -8,6 +8,7 @@ import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {useDispatch, useStore} from 'react-redux';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
 import {createDialog} from '../actions/dialog';
+import {clearSearchData} from '../actions/search';
 
 const SearchUser = ({searchedName, searchedId, navigation}) => {
   const [searchedAvatar, setSearchedAvatar] = React.useState(null);
@@ -39,6 +40,7 @@ const SearchUser = ({searchedName, searchedId, navigation}) => {
         store.getState().user.userId,
       ),
     );
+    dispatch(clearSearchData());
   };
 
   const onCreateDialogHandler = () => {

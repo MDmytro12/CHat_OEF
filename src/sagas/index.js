@@ -1,6 +1,10 @@
 import {all} from '@redux-saga/core/effects';
 import {loginWatcher, registerWatcher} from './auth';
-import {createDialogWatcher} from './dialog.saga';
+import {
+  createDialogWatcher,
+  deleteDialogByIdWatcher,
+  getAllDialogsWatcher,
+} from './dialog.saga';
 import {searchUserWatcher} from './search.saga';
 import {
   changeUserAvatarWatcher,
@@ -17,5 +21,7 @@ export function* allWatchers() {
     changeUserAvatarWatcher(),
     searchUserWatcher(),
     createDialogWatcher(),
+    getAllDialogsWatcher(),
+    deleteDialogByIdWatcher(),
   ]);
 }

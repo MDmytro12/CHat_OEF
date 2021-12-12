@@ -1,5 +1,6 @@
 import {
   FIND_USER_BY_ID,
+  SEARCH_CLEAR_DATA,
   SEARCH_ERROR,
   SEARCH_PENDING,
   SEARCH_SUCCESS,
@@ -35,6 +36,11 @@ export const searchReducer = function (state = intialState, {type, payload}) {
         ...state,
         searchedList: [{...payload}],
       };
+    case SEARCH_CLEAR_DATA:
+      return {
+        ...intialState,
+      };
+      break;
     default:
       return {
         ...state,

@@ -5,10 +5,62 @@ import {backColor, colorFont, dateColor} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {MockMessage} from '../api/mock';
 import DocumentPicker from 'react-native-document-picker';
+import {connect, useStore} from 'react-redux';
+import axios from 'axios';
+import {LINK_GET_USER_AVATAR} from '../constants/links';
+import {ERROR_INTERNET_CONNECTION} from '../constants/error';
 
-const ChatRoomScreen = ({navigation}) => {
+const mapStateToProps = state => {
+  return {
+    ...state,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch,
+  };
+};
+
+const ChatRoomScreenView = ({navigation}) => {
   const [isSubMenu, setIsSubMenu] = useState(false);
   const [smp, setSmp] = useState('bottom: 51%; right: 10%;');
+  const [messages, setMessages] = useState([]);
+  const [msgText, setMsgText] = useState('');
+  const [partnerAvatar, setPartnerAvatar] = useState({
+    uri: 'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
+  });
+
+  const store = useStore();
+  const socketIO = store.getState().socketIO.socketIO;
+
+  React.useEffect(() => {
+    async function fetchAvatar() {
+      const {data} = await axios
+        .post(
+          LINK_GET_USER_AVATAR,
+          {userId: store.getState().dialog.currentPartner},
+          {headers: {Authorization: store.getState().user.token}},
+        )
+        .catch(err => alert(ERROR_INTERNET_CONNECTION));
+      setPartnerAvatar(data);
+    }
+
+    socketIO.emit('sd', {dialogId: store.getState().dialog.currentDialog});
+
+    socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
+
+    fetchAvatar();
+  }, []);
+
+  socketIO.on('giam', allMessages => {
+    setMessages(allMessages);
+  });
+
+  socketIO.on('anm', newMessage => {
+    console.log(newMessage);
+    setMessages([...messages, newMessage]);
+  });
 
   const SubMenuItemsInfo = [
     {
@@ -71,6 +123,23 @@ const ChatRoomScreen = ({navigation}) => {
     setIsSubMenu(false);
   };
 
+  const onPressHandler = () => {
+    socketIO.emit('gnm', {
+      authorId: store.getState().user.userId,
+      dialogId: store.getState().dialog.currentDialog,
+      textContent: msgText,
+      readed: false,
+      isAudio: false,
+      isImage: false,
+      isDocument: false,
+      documentContent: [],
+      audioContent: [],
+      imageContent: [],
+    });
+
+    setMsgText('');
+  };
+
   return (
     <CRContainer>
       {isSubMenu && (
@@ -90,12 +159,12 @@ const ChatRoomScreen = ({navigation}) => {
 
       <ChatHeader
         name={'Петро Петров Петровиcdscscscscч'}
-        image={require('../assets/img/anonym.png')}
+        image={partnerAvatar}
         onPress={onSubMenuHandler}
       />
 
       <CMC>
-        {MockMessage.length === 0 && (
+        {messages.length === 0 && (
           <EMC>
             <Icon
               style={{position: 'absolute', top: '2%', left: '70%'}}
@@ -112,15 +181,18 @@ const ChatRoomScreen = ({navigation}) => {
             <Icon name="group" size={300} color={colorFont} />
           </EMC>
         )}
-        {MockMessage.length > 0 &&
-          MockMessage.map((item, index) => (
-            <Message key={index * 89} {...item} />
+        {messages.length > 0 &&
+          messages.map((item, index) => (
+            <Message key={index * 89} avatarURI={partnerAvatar} {...item} />
           ))}
       </CMC>
 
       <FooterChat
+        onPressHandler={onPressHandler}
         onBlurHandler={onBlurHandler}
         onFocusHandler={onFocusHandler}
+        msgText={msgText}
+        setMsgText={setMsgText}
       />
     </CRContainer>
   );
@@ -176,5 +248,10 @@ const CRContainer = styled.View`
   flex-direction: column;
   position: relative;
 `;
+
+const ChatRoomScreen = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChatRoomScreenView);
 
 export default ChatRoomScreen;

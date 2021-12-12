@@ -3,15 +3,23 @@ import styled from 'styled-components';
 import {backColor, colorFont} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ChatFooter = ({onFocusHandler, onBlurHandler}) => {
+const ChatFooter = ({
+  onPressHandler,
+  onFocusHandler,
+  onBlurHandler,
+  msgText,
+  setMsgText,
+}) => {
   return (
     <CFC>
       <CFI
+        onChangeText={txt => setMsgText(txt)}
+        value={msgText}
         onFocus={onFocusHandler}
         onBlur={onBlurHandler}
         placeholder="Напишіть повідомлення ..."
       />
-      <IC>
+      <IC onPress={() => onPressHandler()}>
         <Icon name="forward-to-inbox" color={colorFont} size={25} />
       </IC>
     </CFC>

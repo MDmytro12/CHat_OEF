@@ -1,8 +1,17 @@
-import {DIALOG_ERROR, DIALOG_PENDING, DIALOG_SUCCESS} from '../constants/types';
+import {
+  DIALOG_ERROR,
+  DIALOG_PENDING,
+  DIALOG_SUCCESS,
+  SET_ALL_DIALOGS,
+  SET_CURRENT_DIALOG_ID,
+  SET_CURRENT_PARTNER,
+} from '../constants/types';
 
 const initialState = {
   allDialogs: [],
   isLoading: false,
+  currentDialog: null,
+  currentPartner: null,
 };
 
 export const dialogReducer = (state = initialState, {type, payload}) => {
@@ -21,6 +30,22 @@ export const dialogReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         isLoading: true,
+      };
+    case SET_ALL_DIALOGS: {
+      return {
+        ...state,
+        allDialogs: payload.allDialogs,
+      };
+    }
+    case SET_CURRENT_DIALOG_ID:
+      return {
+        ...state,
+        currentDialog: payload.dialogId,
+      };
+    case SET_CURRENT_PARTNER:
+      return {
+        ...state,
+        currentPartner: payload.currentPartnerId,
       };
     default:
       return state;

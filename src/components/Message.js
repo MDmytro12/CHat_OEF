@@ -8,41 +8,63 @@ import {
 } from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {MessageAudio, MessageDocument, MessageImage} from '.';
+import {useDispatch, useStore} from 'react-redux';
+import axios from 'axios';
+import {LINK_GET_USER_AVATAR} from '../constants/links';
 
-const Message = ({user, message}) => {
+const Message = ({
+  authorId,
+  textContent,
+  isImage,
+  isDocument,
+  isAudio,
+  audioContent,
+  imageContent,
+  documentContent,
+  readed,
+  avatarURI,
+}) => {
+  const store = useStore();
+  const dispatch = useDispatch();
+  const isMe = authorId._id === store.getState().user.userId;
+
+  React.useEffect(() => {
+    console.log('Message : ', authorId);
+  }, []);
+
   return (
-    <MC isMe={message.isMe}>
-      <MTC isMe={message.isMe}>
-        {message.content.length !== 0 && <MT>{message.content}</MT>}
-        {message.isImage &&
-          message.imageContent.map((item, index) => (
+    <MC isMe={isMe}>
+      <MTC isMe={isMe}>
+        {textContent.length !== 0 && <MT>{textContent}</MT>}
+        {isImage &&
+          imageContent.map((item, index) => (
             <MessageImage
               image={item.name}
               first={index === 0}
-              last={index === message.imageContent.length - 1}
+              last={index === imageContent.length - 1}
               key={index * 67}
             />
           ))}
-        {message.isDocument &&
-          message.documentContent.map((item, index) => (
+        {isDocument &&
+          documentContent.map((item, index) => (
             <MessageDocument key={index * 67} name={item.name} />
           ))}
-        {message.isAudio &&
-          message.audioContent.map((item, index) => (
+        {isAudio &&
+          audioContent.map((item, index) => (
             <MessageAudio name={item.name} key={index * 67} />
           ))}
       </MTC>
       <ILC>
-        <IRC isMe={message.isMe}>
-          {message.readed && <Icon name="done" size={25} color="black" />}
-          {!message.readed && <Icon name="done-all" size={25} color="black" />}
+        <IRC isMe={isMe}>
+          {!readed && <Icon name="done" size={25} color="black" />}
+          {readed && <Icon name="done-all" size={25} color="black" />}
         </IRC>
-        {!message.isMe && (
+        {!isMe && (
           <AC>
-            <A source={user.imageUrl} />
+            <A source={avatarURI} />
           </AC>
         )}
-        <Date isMe={message.isMe}>21.12.2021</Date>
+        <Date isMe={isMe}>21.12.2021</Date>
       </ILC>
     </MC>
   );

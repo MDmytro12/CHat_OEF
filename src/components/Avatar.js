@@ -31,8 +31,9 @@ const OIConatainer = styled.View`
 `;
 
 const ImageAvatar = styled.Image`
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
+  border-radius: 100px;
 `;
 
 const ImageContainer = styled.View`
