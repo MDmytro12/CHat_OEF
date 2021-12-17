@@ -24,6 +24,8 @@ const AccountRoute = () => {
     dispatch(setSocketIo(socketIO));
     dispatch(getUserInfo(userId, token));
     dispatch(getUserAvatar(userId, token));
+
+    socketIO.emit('suo', {userId});
   }, []);
 
   return (

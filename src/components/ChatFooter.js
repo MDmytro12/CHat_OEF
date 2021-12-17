@@ -2,29 +2,39 @@ import React from 'react';
 import styled from 'styled-components';
 import {backColor, colorFont} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Typing} from './Typing';
 
 const ChatFooter = ({
   onPressHandler,
   onFocusHandler,
+  partnerName,
   onBlurHandler,
   msgText,
   setMsgText,
+  isTyping,
 }) => {
   return (
-    <CFC>
-      <CFI
-        onChangeText={txt => setMsgText(txt)}
-        value={msgText}
-        onFocus={onFocusHandler}
-        onBlur={onBlurHandler}
-        placeholder="Напишіть повідомлення ..."
-      />
-      <IC onPress={() => onPressHandler()}>
-        <Icon name="forward-to-inbox" color={colorFont} size={25} />
-      </IC>
-    </CFC>
+    <CFW>
+      {isTyping && <Typing partnerName={partnerName} />}
+      <CFC>
+        <CFI
+          onChangeText={txt => setMsgText(txt)}
+          value={msgText}
+          onFocus={onFocusHandler}
+          onBlur={onBlurHandler}
+          placeholder="Напишіть повідомлення ..."
+        />
+        <IC onPress={() => onPressHandler()}>
+          <Icon name="forward-to-inbox" color={colorFont} size={25} />
+        </IC>
+      </CFC>
+    </CFW>
   );
 };
+
+const CFW = styled.View`
+  position: relative;
+`;
 
 const IC = styled.TouchableOpacity`
   width: 40px;

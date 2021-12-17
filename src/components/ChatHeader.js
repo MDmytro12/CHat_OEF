@@ -1,16 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import {backColor, colorFont, errorColor} from '../constants/style';
+import {
+  backColor,
+  colorFont,
+  errorColor,
+  onlineColor,
+} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {format, formatDistance} from 'date-fns';
+import {uk} from 'date-fns/locale';
 
-const ChatHeader = ({image, name, children, onPress}) => {
+const ChatHeader = ({image, name, children, onPress, online, logoutAt}) => {
   return (
     <CHC>
       {children}
       <AIC>
         <AI source={image} />
         <IC>
-          <Icon name="not-started" color={errorColor} size={25} />
+          {online && <Icon name="offline-bolt" size={25} color={onlineColor} />}
+          {!online && <Icon name="not-started" color={errorColor} size={25} />}
         </IC>
       </AIC>
       <InC>
@@ -18,7 +26,9 @@ const ChatHeader = ({image, name, children, onPress}) => {
           {name}
         </FullName>
         <Time numberOfLines={1} ellipsizeMode="tail">
-          21.12.2021
+          {formatDistance(new window.Date(logoutAt), window.Date.now(), {
+            locale: uk,
+          })}
         </Time>
       </InC>
       <AC onPress={onPress}>

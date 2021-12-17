@@ -62,8 +62,8 @@ function* createDialogWorker({payload}) {
 
 // get all dialogs
 
-const fetchGetAllDialogs = ({token}) =>
-  axios.post(LINK_GET_ALL_DIALOGS, {}, {headers: {Authorization: token}});
+const fetchGetAllDialogs = ({token, userId}) =>
+  axios.post(LINK_GET_ALL_DIALOGS, {userId}, {headers: {Authorization: token}});
 
 function* getAllDialogsWatcher() {
   yield takeEvery(GET_ALL_DIALOGS, getAllDialogWorker);

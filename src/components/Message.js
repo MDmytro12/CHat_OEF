@@ -26,11 +26,10 @@ const Message = ({
 }) => {
   const store = useStore();
   const dispatch = useDispatch();
+
   const isMe = authorId._id === store.getState().user.userId;
 
-  React.useEffect(() => {
-    console.log('Message : ', authorId);
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <MC isMe={isMe}>

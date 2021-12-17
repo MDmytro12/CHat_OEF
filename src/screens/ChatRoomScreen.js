@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import styled from 'styled-components';
 import {ChatHeader, FooterChat, Message} from '../components';
 import {backColor, colorFont, dateColor} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {MockMessage} from '../api/mock';
 import DocumentPicker from 'react-native-document-picker';
-import {connect, useStore} from 'react-redux';
+import {connect, useDispatch, useStore} from 'react-redux';
 import axios from 'axios';
 import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
+import {ActivityIndicator} from 'react-native';
+import {setPartnerOnline} from '../actions/dialog';
 
 const mapStateToProps = state => {
   return {
@@ -27,14 +28,22 @@ const ChatRoomScreenView = ({navigation}) => {
   const [smp, setSmp] = useState('bottom: 51%; right: 10%;');
   const [messages, setMessages] = useState([]);
   const [msgText, setMsgText] = useState('');
+  const [typing, setTyping] = useState(false);
+  const [partnerLogout, setPartnerLogout] = useState(Date.now());
   const [partnerAvatar, setPartnerAvatar] = useState({
     uri: 'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
   });
+  const [partnerName, setPartnerName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const store = useStore();
+  const dispatch = useDispatch();
   const socketIO = store.getState().socketIO.socketIO;
 
+  const scrollViewRef = useRef();
+
   React.useEffect(() => {
+    setIsLoading(true);
     async function fetchAvatar() {
       const {data} = await axios
         .post(
@@ -46,21 +55,57 @@ const ChatRoomScreenView = ({navigation}) => {
       setPartnerAvatar(data);
     }
 
+    socketIO.emit('gun', {userId: store.getState().dialog.currentPartner});
+
     socketIO.emit('sd', {dialogId: store.getState().dialog.currentDialog});
 
     socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
 
+    socketIO.emit('gulu', {
+      dialogId: store.getState().dialog.currentDialog,
+      userId: store.getState().dialog.currentPartner,
+    });
+
     fetchAvatar();
-  }, []);
+socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
+    const socketInterval = setInterval(() => {
+      socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
+    }, 30000);
+
+    return function () {
+      clearInterval(socketInterval);
+    };
+  }, [store.getState().dialog.currentPartner]);
+
+  socketIO.on('giuo', ({online}) => {
+    dispatch(setPartnerOnline(online));
+  });
+
+  socketIO.on('giun', ({username}) => {
+    setPartnerName(username);
+  });
 
   socketIO.on('giam', allMessages => {
     setMessages(allMessages);
+    setIsLoading(false);
   });
 
   socketIO.on('anm', newMessage => {
-    console.log(newMessage);
     setMessages([...messages, newMessage]);
   });
+
+  socketIO.on('giulu', ({logoutAt}) => {
+    setPartnerLogout(logoutAt);
+  });
+
+  socketIO.on('pt', ({userId}) => {
+    if (userId !== store.getState().user.userId) {
+      setTyping(true);
+    }
+  });
+
+  socketIO.on('put', ({userId}) => {
+  setTyping(false);});
 
   const SubMenuItemsInfo = [
     {
@@ -112,10 +157,18 @@ const ChatRoomScreenView = ({navigation}) => {
   };
 
   const onFocusHandler = () => {
+    socketIO.emit('pt', {
+      dialogId: store.getState().dialog.currentDialog,
+      userId: store.getState().user.userId,
+    });
     setSmp('top: 17%;right: 10%;');
   };
 
   const onBlurHandler = () => {
+    socketIO.emit('put', {
+      dialogId: store.getState().dialog.currentDialog,
+      userId: store.getState().user.userId,
+    });
     setSmp('bottom: 51%; right: 10%;');
   };
 
@@ -126,6 +179,7 @@ const ChatRoomScreenView = ({navigation}) => {
   const onPressHandler = () => {
     socketIO.emit('gnm', {
       authorId: store.getState().user.userId,
+      sendedAt: window.Date.now(),
       dialogId: store.getState().dialog.currentDialog,
       textContent: msgText,
       readed: false,
@@ -158,36 +212,58 @@ const ChatRoomScreenView = ({navigation}) => {
       )}
 
       <ChatHeader
-        name={'Петро Петров Петровиcdscscscscч'}
+        logoutAt={partnerLogout}
+        name={partnerName}
         image={partnerAvatar}
         onPress={onSubMenuHandler}
+        online={store.getState().dialog.currentPartnerOnline}
       />
 
-      <CMC>
-        {messages.length === 0 && (
-          <EMC>
-            <Icon
-              style={{position: 'absolute', top: '2%', left: '70%'}}
-              name="message"
-              color={dateColor}
-              size={100}
-            />
-            <Icon
-              style={{position: 'absolute', top: '-4%', left: '0%'}}
-              name="mode-comment"
-              color={dateColor}
-              size={130}
-            />
-            <Icon name="group" size={300} color={colorFont} />
-          </EMC>
+      <CMC
+        isTyping={typing}
+        ref={scrollViewRef}
+        onContentSizeChange={() =>
+          scrollViewRef.current.scrollToEnd({animated: true})
+        }>
+        {isLoading && (
+          <ActivityIndicator
+            style={{
+              marginTop: '60%',
+            }}
+            size={'large'}
+            color={colorFont}
+          />
         )}
-        {messages.length > 0 &&
-          messages.map((item, index) => (
-            <Message key={index * 89} avatarURI={partnerAvatar} {...item} />
-          ))}
+        {!isLoading && (
+          <>
+            {messages.length === 0 && (
+              <EMC>
+                <Icon
+                  style={{position: 'absolute', top: '2%', left: '70%'}}
+                  name="message"
+                  color={dateColor}
+                  size={100}
+                />
+                <Icon
+                  style={{position: 'absolute', top: '-4%', left: '0%'}}
+                  name="mode-comment"
+                  color={dateColor}
+                  size={130}
+                />
+                <Icon name="group" size={300} color={colorFont} />
+              </EMC>
+            )}
+            {messages.length > 0 &&
+              messages.map((item, index) => (
+                <Message key={index * 89} avatarURI={partnerAvatar} {...item} />
+              ))}
+          </>
+        )}
       </CMC>
 
       <FooterChat
+        isTyping={typing}
+        partnerName={partnerName}
         onPressHandler={onPressHandler}
         onBlurHandler={onBlurHandler}
         onFocusHandler={onFocusHandler}
@@ -238,7 +314,7 @@ const SMC = styled.View`
 const CMC = styled.ScrollView`
   padding-right: 23px;
   padding-left: 20px;
-  margin-bottom: 16px;
+  margin-bottom: ${({isTyping}) => (isTyping ? '46px' : '20px')};
 `;
 
 const CRContainer = styled.View`

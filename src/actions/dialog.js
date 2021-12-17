@@ -1,4 +1,5 @@
 import {
+  CLEAR_PARTNER_DATA,
   CREATE_DIALOG,
   DIALOG_DELETE_BY_ID,
   DIALOG_ERROR,
@@ -8,6 +9,8 @@ import {
   SET_ALL_DIALOGS,
   SET_CURRENT_DIALOG_ID,
   SET_CURRENT_PARTNER,
+  SET_PARTNER_ONLINE,
+  SET_PARTNER_TYPING,
 } from '../constants/types';
 
 export const createDialog = (navigation, partnerId, token, userId) => ({
@@ -15,9 +18,9 @@ export const createDialog = (navigation, partnerId, token, userId) => ({
   payload: {partnerId, userId, token, navigation},
 });
 
-export const getAllDialog = token => ({
+export const getAllDialog = (token, userId) => ({
   type: GET_ALL_DIALOGS,
-  payload: {token},
+  payload: {token, userId},
 });
 
 export const setAllDialogs = allDialogs => ({
@@ -51,3 +54,17 @@ export const setCurrentPartnerId = currentPartnerId => ({
     currentPartnerId,
   },
 });
+
+export const setPartnerOnline = online => ({
+  type: SET_PARTNER_ONLINE,
+  payload: {
+    online,
+  },
+});
+
+export const setPartnerTyping = isTyping => ({
+  type: SET_PARTNER_TYPING,
+  payload: {isTyping},
+});
+
+export const clearPartnerData = () => ({type: CLEAR_PARTNER_DATA});

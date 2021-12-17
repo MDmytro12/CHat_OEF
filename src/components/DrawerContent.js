@@ -7,6 +7,7 @@ import {useStore, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import {changeUserAvatar, getUserAvatar, userExit} from '../actions/user';
+import {clearPartnerData, getAllDialog} from '../actions/dialog';
 
 const DrawerContent = ({props: {navigation}}) => {
   const store = useStore();
@@ -17,6 +18,19 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Діалоги',
       iconName: 'chat-bubble-outline',
       onPress: () => {
+        dispatch(
+          getAllDialog(
+            store.getState().user.token,
+            store.getState().user.userId,
+          ),
+        );
+
+
+        store
+          .getState()
+          .socketIO.socketIO.emit('gam', {
+            dialogId: store.getState().dialog.currentDialog,
+          });
         navigation.navigate('DialogItem');
       },
     },
@@ -24,6 +38,9 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Покинути чат',
       iconName: 'exit-to-app',
       onPress: () => {
+        store.getState().socketIO.socketIO.emit('suof', {
+          userId: store.getState().user.userId,
+        });
         dispatch(userExit());
         navigation.navigate('Login');
       },
@@ -73,10 +90,12 @@ const DrawerContent = ({props: {navigation}}) => {
               }}
             />
             <OIConatainer>
-              {false && (
+              {store.getState().user.online && (
                 <Icon name="offline-bolt" size={25} color={onlineColor} />
               )}
-              {true && <Icon name="not-started" size={25} color={errorColor} />}
+              {!store.getState().user.online && (
+                <Icon name="not-started" size={25} color={errorColor} />
+              )}
             </OIConatainer>
           </AvatarImageContainer>
         </AIW>

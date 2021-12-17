@@ -43,7 +43,9 @@ const DialogItemsView = ({navigation}) => {
   const DIlist = store.getState().dialog.allDialogs;
 
   React.useEffect(() => {
-    dispatch(getAllDialog(store.getState().user.token));
+    dispatch(
+      getAllDialog(store.getState().user.token, store.getState().user.userId),
+    );
   }, []);
 
   const DialogItemHandler = item => {
@@ -60,7 +62,7 @@ const DialogItemsView = ({navigation}) => {
   };
 
   const onRefreshHandler = () => {
-    dispatch(getAllDialog(store.getState().user.token));
+    dispatch(getAllDialog(store.getState().user.token , store.getState().user.userId));
   };
 
   const onTextChangeHandler = textValue => {

@@ -7,6 +7,8 @@ import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {borderColor, colorFont, dateColor} from '../constants/style';
 import {detectPartnerId} from '../utils/detecionUtil';
 import Avatar from './Avatar';
+import {format, formatDistance} from 'date-fns';
+import {uk} from 'date-fns/locale';
 
 const DialogItem = ({dialogItemInfo, onPress}) => {
   const store = useStore();
@@ -14,20 +16,19 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
   const [partnerAvatar, setPartnerAvatar] = React.useState({
     uri: 'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
   });
-
   const {authors, message} = dialogItemInfo;
   const partnerIndex = detectPartnerId(authors);
   const user =
     authors[0].user._id === store.getState().user.userId
       ? authors[1].user
       : authors[0].user;
-  const msg = message.length
-    ? message[0]
-    : {
-        sendedAt: 'щойно',
+  const msg = Array.isArray(message)
+    ? {
+        textContent: 'Діалог щойно створено!',
         readed: false,
-        content: 'Діалог пустий!Розпочніть бесіду!',
-      };
+        sendedAt: window.Date.now(),
+      }
+    : message;
 
   React.useEffect(() => {
     async function getPartnerAvatar() {
@@ -46,7 +47,7 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
   return (
     <DIContainer onPress={onPress} readed={msg.readed}>
       <DContainer>
-        <Date>{msg.sendedAt}</Date>
+        <Date>{format(window.Date.now(), 'dd/MM/yy', {locale: uk})}</Date>
       </DContainer>
       <Avatar online={user.online} image={partnerAvatar} />
       <IContainer>
@@ -54,7 +55,7 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
           {user.username}
         </FullName>
         <MessageContent numberOfLines={2} ellipsizeMode="tail">
-          {msg.content}
+          {msg.textContent}
         </MessageContent>
       </IContainer>
     </DIContainer>
