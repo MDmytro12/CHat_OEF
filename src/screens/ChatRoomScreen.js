@@ -43,6 +43,7 @@ const ChatRoomScreenView = ({navigation}) => {
   const scrollViewRef = useRef();
 
   React.useEffect(() => {
+    console.log(new Date());
     setIsLoading(true);
     async function fetchAvatar() {
       const {data} = await axios
@@ -67,7 +68,7 @@ const ChatRoomScreenView = ({navigation}) => {
     });
 
     fetchAvatar();
-socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
+    socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
     const socketInterval = setInterval(() => {
       socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
     }, 30000);
@@ -105,7 +106,8 @@ socketIO.emit('guo', {userId: store.getState().dialog.currentPartner});
   });
 
   socketIO.on('put', ({userId}) => {
-  setTyping(false);});
+    setTyping(false);
+  });
 
   const SubMenuItemsInfo = [
     {

@@ -11,6 +11,9 @@ import {MessageAudio, MessageDocument, MessageImage} from '.';
 import {useDispatch, useStore} from 'react-redux';
 import axios from 'axios';
 import {LINK_GET_USER_AVATAR} from '../constants/links';
+import {format, formatDistance} from 'date-fns';
+import {uk} from 'date-fns/locale';
+import moment from 'moment';
 
 const Message = ({
   authorId,
@@ -23,6 +26,7 @@ const Message = ({
   documentContent,
   readed,
   avatarURI,
+  sendedAt,
 }) => {
   const store = useStore();
   const dispatch = useDispatch();
@@ -63,7 +67,11 @@ const Message = ({
             <A source={avatarURI} />
           </AC>
         )}
-        <Date isMe={isMe}>21.12.2021</Date>
+        <Date isMe={isMe}>
+          {formatDistance(new window.Date(sendedAt), window.Date.now(), {
+            locale: uk,
+          })}
+        </Date>
       </ILC>
     </MC>
   );

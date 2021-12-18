@@ -25,13 +25,17 @@ const DrawerContent = ({props: {navigation}}) => {
           ),
         );
 
-
-        store
-          .getState()
-          .socketIO.socketIO.emit('gam', {
-            dialogId: store.getState().dialog.currentDialog,
-          });
+        store.getState().socketIO.socketIO.emit('gam', {
+          dialogId: store.getState().dialog.currentDialog,
+        });
         navigation.navigate('DialogItem');
+      },
+    },
+    {
+      itemName: 'Редагувати профіль ',
+      iconName: 'mode-edit',
+      onPress: () => {
+        navigation.navigate('Setting');
       },
     },
     {
@@ -39,6 +43,10 @@ const DrawerContent = ({props: {navigation}}) => {
       iconName: 'exit-to-app',
       onPress: () => {
         store.getState().socketIO.socketIO.emit('suof', {
+          userId: store.getState().user.userId,
+        });
+        store.getState().socketIO.socketIO.emit('sulu', {
+          logoutAt: new window.Date(),
           userId: store.getState().user.userId,
         });
         dispatch(userExit());

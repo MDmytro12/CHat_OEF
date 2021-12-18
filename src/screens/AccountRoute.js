@@ -10,6 +10,8 @@ import {getUserAvatar, getUserInfo} from '../actions/user';
 import {io} from 'socket.io-client';
 import {LINK_SOCKET_IO} from '../constants/links';
 import {setSocketIo} from '../actions/socket';
+import SettingUserScreen from './UserInfoScreen';
+import ChangeScreen from './ChangeScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,6 +28,10 @@ const AccountRoute = () => {
     dispatch(getUserAvatar(userId, token));
 
     socketIO.emit('suo', {userId});
+    socketIO.emit('sulo', {
+      logoutAt: new window.Date(),
+      userId: store.getState().user.userId,
+    });
   }, []);
 
   return (
@@ -47,6 +53,8 @@ const AccountRoute = () => {
       <Drawer.Screen name="DialogItem" component={DialogItemsScreen} />
       <Drawer.Screen name="ChatRoom" component={ChatRoomScreen} />
       <Drawer.Screen name="FindUser" component={FindUserScreen} />
+      <Drawer.Screen name="Setting" component={SettingUserScreen} />
+      <Drawer.Screen name="ChangeInfo" component={ChangeScreen} />
     </Drawer.Navigator>
   );
 };

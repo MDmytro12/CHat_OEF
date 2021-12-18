@@ -17,6 +17,7 @@ const ItemText = styled.Text`
   font-weight: 900;
   color: ${colorFont};
   padding-left: 15px;
+  max-width: 200px;
 `;
 
 const MIWrapper = styled.TouchableOpacity`
