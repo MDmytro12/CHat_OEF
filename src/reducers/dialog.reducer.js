@@ -1,5 +1,6 @@
 import {
   CLEAR_PARTNER_DATA,
+  CLEAR_TIMER,
   DIALOG_ERROR,
   DIALOG_PENDING,
   DIALOG_SUCCESS,
@@ -8,6 +9,7 @@ import {
   SET_CURRENT_PARTNER,
   SET_PARTNER_ONLINE,
   SET_PARTNER_TYPING,
+  SET_TIMER,
 } from '../constants/types';
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   currentPartner: null,
   currentPartnerOnline: false,
   currentPartnerTyping: false,
+  timer: null,
 };
 
 export const dialogReducer = (state = initialState, {type, payload}) => {
@@ -69,6 +72,16 @@ export const dialogReducer = (state = initialState, {type, payload}) => {
         currentPartner: null,
         currentPartnerOnline: false,
         currentPartnerTyping: false,
+      };
+    case SET_TIMER:
+      return {
+        ...state,
+        timer: payload,
+      };
+    case CLEAR_TIMER:
+      return {
+        ...state,
+        timer: null,
       };
     default:
       return state;

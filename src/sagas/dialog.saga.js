@@ -109,7 +109,6 @@ function* deleteDialogByIdWorker({payload}) {
     }
   } catch (err) {
     yield put(dialogError());
-    console.log('ERROR : ', err.message);
     alert(ERROR_INTERNET_CONNECTION);
   }
 }

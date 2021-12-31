@@ -23,11 +23,13 @@ const AccountRoute = () => {
     let userId = store.getState().user.userId;
     let token = store.getState().user.token;
     let socketIO = io(LINK_SOCKET_IO);
+
     dispatch(setSocketIo(socketIO));
     dispatch(getUserInfo(userId, token));
     dispatch(getUserAvatar(userId, token));
 
     socketIO.emit('suo', {userId});
+
     socketIO.emit('sulo', {
       logoutAt: new window.Date(),
       userId: store.getState().user.userId,

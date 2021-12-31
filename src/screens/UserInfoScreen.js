@@ -24,14 +24,15 @@ const SettingUserScreenView = ({navigation}) => {
   const [myName, setMyName] = React.useState('');
   const [myLogin, setMyLogin] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isCopied, setIsCopied] = React.useState(false);
   const socket = store.getState().socketIO.socketIO;
 
   React.useEffect(() => {
+    setMyLogin('');
+    setMyName('');
     socket.emit('gui', {
       userId: store.getState().user.userId,
     });
-  }, []);
+  }, [store.getState().user.toggle]);
 
   socket.on('giui', ({username, login}) => {
     setMyName(username);
@@ -49,7 +50,11 @@ const SettingUserScreenView = ({navigation}) => {
     });
   };
 
-  const onChangeUserName = () => {};
+  const onChangeUserName = () => {
+    navigation.navigate('ChangeInfo', {
+      type: 'CUN',
+    });
+  };
 
   return (
     <FUC>
@@ -57,10 +62,10 @@ const SettingUserScreenView = ({navigation}) => {
       <CWS>
         <TitleName>Ім'я користувача :</TitleName>
         {isLoading && <ActivityIndicator color={colorFont} size={'small'} />}
-        {!isLoading && <ValueText>Marchuk Denus</ValueText>}
+        {!isLoading && <ValueText>{myName}</ValueText>}
 
         <Button
-          onPress={() => alert('Change!')}
+          onPress={onChangeUserName}
           buttonStyle={{width: '100%'}}
           iconName="mode-edit">
           <Text>Змінити</Text>

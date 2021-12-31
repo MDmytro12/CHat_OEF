@@ -26,8 +26,8 @@ const TypingText = styled.Text`
 `;
 
 const TypingContainer = styled.View`
-  position: absolute;
   display: flex;
   flex-direction: row;
-  transform: translateY(-30px) translateX(30px);
+  padding-left: 25px;
+  padding-bottom: 5px;
 `;

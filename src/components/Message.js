@@ -13,7 +13,7 @@ import axios from 'axios';
 import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {format, formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
-import moment from 'moment';
+import {decryptText} from '../utils/Encryption';
 
 const Message = ({
   authorId,
@@ -32,17 +32,27 @@ const Message = ({
   const dispatch = useDispatch();
 
   const isMe = authorId._id === store.getState().user.userId;
+  const secret = isMe ? authorId._id : store.getState().user.userId;
 
-  React.useEffect(() => {}, []);
+  const [decryptedText, setDecryptedText] = React.useState('');
+
+  React.useEffect(() => {
+    async function dT() {
+      let dText = await decryptText(textContent, secret);
+      setDecryptedText(dText);
+    }
+
+    dT();
+  }, []);
 
   return (
     <MC isMe={isMe}>
       <MTC isMe={isMe}>
-        {textContent.length !== 0 && <MT>{textContent}</MT>}
+        {textContent.length !== 0 && <MT>{decryptedText}</MT>}
         {isImage &&
           imageContent.map((item, index) => (
             <MessageImage
-              image={item.name}
+              image={{uri: item.uri}}
               first={index === 0}
               last={index === imageContent.length - 1}
               key={index * 67}

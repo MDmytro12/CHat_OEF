@@ -1,4 +1,5 @@
 import {
+  TOGGLE_SCREEN,
   USER_CHANGE_AVATAR,
   USER_EXIT,
   USER_GET_AVATAR,
@@ -48,3 +49,8 @@ export const changeUserAvatar = (userId, token, img) => ({
 });
 
 export const userExit = () => ({type: USER_EXIT});
+
+export const toggleScreen = toggle => ({
+  type: TOGGLE_SCREEN,
+  payload: {toggle},
+});

@@ -1,4 +1,5 @@
 import {
+  TOGGLE_SCREEN,
   USER_EXIT,
   USER_SET_AVATAR,
   USER_SET_TOKEN,
@@ -13,6 +14,7 @@ const initialState = {
     'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
   username: null,
   online: false,
+  toggle: false,
 };
 
 export const userReducer = (state = initialState, {type, payload}) => {
@@ -46,6 +48,11 @@ export const userReducer = (state = initialState, {type, payload}) => {
         online: false,
         avatar:
           'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
+      };
+    case TOGGLE_SCREEN:
+      return {
+        ...state,
+        toggle: !payload.toggle,
       };
     default:
       return state;

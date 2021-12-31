@@ -1,5 +1,6 @@
 import {
   CLEAR_PARTNER_DATA,
+  CLEAR_TIMER,
   CREATE_DIALOG,
   DIALOG_DELETE_BY_ID,
   DIALOG_ERROR,
@@ -11,6 +12,7 @@ import {
   SET_CURRENT_PARTNER,
   SET_PARTNER_ONLINE,
   SET_PARTNER_TYPING,
+  SET_TIMER,
 } from '../constants/types';
 
 export const createDialog = (navigation, partnerId, token, userId) => ({

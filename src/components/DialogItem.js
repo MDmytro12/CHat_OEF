@@ -48,13 +48,9 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
     <DIContainer onPress={onPress} readed={msg.readed}>
       <DContainer>
         <Date>
-          {formatDistance(
-            new window.Date(message.sendedAt),
-            window.Date.now(),
-            {
-              locale: uk,
-            },
-          )}
+          {formatDistance(new window.Date(msg.sendedAt), window.Date.now(), {
+            locale: uk,
+          })}
         </Date>
       </DContainer>
       <Avatar online={user.online} image={partnerAvatar} />
@@ -77,7 +73,7 @@ const Date = styled.Text`
 
 const DContainer = styled.View`
   position: absolute;
-  top: 90%;
+  top: 97%;
   right: 5%;
 `;
 

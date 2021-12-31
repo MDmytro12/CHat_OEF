@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {
   backColor,
@@ -7,29 +7,51 @@ import {
   onlineColor,
 } from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {format, formatDistance} from 'date-fns';
+import {useStore} from 'react-redux';
+import {formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
 
-const ChatHeader = ({image, name, children, onPress, online, logoutAt}) => {
+const ChatHeader = ({image, name, children, onPress, logoutAt}) => {
+  const store = useStore();
+  const online = store.getState().dialog.currentPartnerOnline;
+  const socketIO = store.getState().socketIO.socketIO;
+  const [onlinee, setOnline] = useState(false);
+
+  socketIO.on('giuo', ({online}) => {
+    if (online) {
+      console.log('User is online!');
+    } else {
+      console.log('User is not online!');
+    }
+    if (online !== onlinee) {
+      setOnline(online);
+    }
+  });
+
   return (
     <CHC>
       {children}
       <AIC>
         <AI source={image} />
         <IC>
-          {online && <Icon name="offline-bolt" size={25} color={onlineColor} />}
-          {!online && <Icon name="not-started" color={errorColor} size={25} />}
+          {onlinee && (
+            <Icon name="offline-bolt" size={25} color={onlineColor} />
+          )}
+          {!onlinee && <Icon name="not-started" color={errorColor} size={25} />}
         </IC>
       </AIC>
       <InC>
         <FullName numberOfLines={1} ellipsizeMode="tail">
           {name}
         </FullName>
-        <Time numberOfLines={1} ellipsizeMode="tail">
-          {formatDistance(new window.Date(logoutAt), window.Date.now(), {
-            locale: uk,
-          })}
-        </Time>
+        {!onlinee && (
+          <Time numberOfLines={1} ellipsizeMode="tail">
+            {logoutAt &&
+              formatDistance(window.Date.now(), new window.Date(logoutAt), {
+                locale: uk,
+              })}
+          </Time>
+        )}
       </InC>
       <AC onPress={onPress}>
         <Icon name="library-add" size={35} color={colorFont} />

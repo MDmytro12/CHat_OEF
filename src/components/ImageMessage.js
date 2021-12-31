@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MessageImage = ({image, first, last}) => {
+  console.log('image ', image);
   return (
     <MIW>
       <MIC>
@@ -13,7 +14,7 @@ const MessageImage = ({image, first, last}) => {
 
 const I = styled.Image`
   width: 100%;
-  max-height: 400px;
+  height: 100%;
   ${({first}) =>
     first ? 'border-top-left-radius: 30px; border-top-right-radius: 30px;' : ''}
   ${({last}) =>
@@ -24,10 +25,14 @@ const I = styled.Image`
 
 const MIC = styled.View`
   width: 100%;
+  height: 100%;
 `;
 
 const MIW = styled.TouchableOpacity`
   padding-bottom: 15px;
+  min-width: 100%;
+  max-height: 450px;
+  height: 100%;
 `;
 
 export default MessageImage;

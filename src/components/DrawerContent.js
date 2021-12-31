@@ -6,8 +6,8 @@ import {MenuItem} from '.';
 import {useStore, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
-import {changeUserAvatar, getUserAvatar, userExit} from '../actions/user';
-import {clearPartnerData, getAllDialog} from '../actions/dialog';
+import {changeUserAvatar, toggleScreen, userExit} from '../actions/user';
+import {clearInt, getAllDialog} from '../actions/dialog';
 
 const DrawerContent = ({props: {navigation}}) => {
   const store = useStore();
@@ -18,6 +18,7 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Діалоги',
       iconName: 'chat-bubble-outline',
       onPress: () => {
+        dispatch(toggleScreen(store.getState().user.toggle));
         dispatch(
           getAllDialog(
             store.getState().user.token,
@@ -35,6 +36,7 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Редагувати профіль ',
       iconName: 'mode-edit',
       onPress: () => {
+        dispatch(toggleScreen(store.getState().user.toggle));
         navigation.navigate('Setting');
       },
     },
@@ -51,6 +53,8 @@ const DrawerContent = ({props: {navigation}}) => {
         });
         dispatch(userExit());
         navigation.navigate('Login');
+
+        // store.getState().socketIO.socketIO.emit('dams')
       },
     },
   ];
@@ -60,6 +64,7 @@ const DrawerContent = ({props: {navigation}}) => {
   };
 
   const onImageChange = async () => {
+    console.log(store.getState().user.avatar);
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.images],
@@ -109,7 +114,10 @@ const DrawerContent = ({props: {navigation}}) => {
         </AIW>
 
         {store.getState().user.username ? (
-          <UserName>{store.getState().user.username}</UserName>
+          <UserName numberOfLines={1} ellipsizeMode="tail">
+            {' '}
+            {store.getState().user.username}
+          </UserName>
         ) : (
           <ActivityIndicator
             style={{paddingTop: 20}}
@@ -141,6 +149,8 @@ const UserName = styled.Text`
   font-size: 22px;
   font-weight: 700;
   color: black;
+  width: 80%;
+  text-align: center;
 `;
 
 const ABContainer = styled.TouchableOpacity`
