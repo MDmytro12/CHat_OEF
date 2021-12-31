@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useStore} from 'react-redux';
 import styled from 'styled-components';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
@@ -18,7 +18,7 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
     uri: 'https://st4.depositphotos.com/1000507/24488/v/600/depositphotos_244889634-stock-illustration-user-profile-picture-isolate-background.jpg',
   });
   const {authors, message} = dialogItemInfo;
-  const partnerIndex = detectPartnerId(authors);
+  const [textContext, setTextContent] = useState('');
   const user =
     authors[0].user._id === store.getState().user.userId
       ? authors[1].user
@@ -30,10 +30,11 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
         sendedAt: window.Date.now(),
       }
     : message;
+  console.log('DIALOG ITEM!');
 
   React.useEffect(() => {
     async function getPartnerAvatar() {
-      axios
+      await axios
         .post(
           LINK_GET_USER_AVATAR,
           {userId: user._id},
@@ -43,14 +44,21 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
         .catch(err => alert(ERROR_INTERNET_CONNECTION));
 
       if (typeof msg === 'object') {
-        msg.textContent = await decryptText(msg.textContent, msg.authorId);
+        let dt = (msg.textContent = await decryptText(
+          msg.textContent,
+          msg.authorId,
+        ));
+        setTextContent(dt);
+      } else {
+        setTextContent('Діалог щойно створено!');
       }
     }
+
     getPartnerAvatar();
   }, []);
 
   return (
-    <DIContainer onPress={onPress} readed={msg.readed}>
+    <DIContainer readed={msg.isReaded} onPress={onPress}>
       <DContainer>
         <Date>
           {formatDistance(new window.Date(msg.sendedAt), window.Date.now(), {
@@ -78,7 +86,7 @@ const Date = styled.Text`
 
 const DContainer = styled.View`
   position: absolute;
-  top: 1s0%;
+  top: 10%;
   right: 5%;
 `;
 

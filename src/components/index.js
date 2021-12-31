@@ -11,3 +11,5 @@ export {default as MessageDocument} from './MessageDocument';
 export {default as MessageAudio} from './AudioMessage';
 export {default as MessageImage} from './ImageMessage';
 export {default as SearchUser} from './SearchUser';
+export {default as ChatMain} from './ChatMain';
+export {default as SubMenu} from './SubMenu';

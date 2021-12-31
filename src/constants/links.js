@@ -11,3 +11,5 @@ export const LINK_SOCKET_IO = `http://${IP}:${PORT}`;
 export const LINK_GET_ALL_DIALOGS = `http://${IP}:${PORT}/api/dialog/gad`;
 export const LINK_DELETE_DIALOF_BY_ID = `http://${IP}:${PORT}/api/dialog/ddbi`;
 export const LINK_SEND_IMAGE = `http://${IP}:${PORT}/api/msg/img`;
+export const LINK_SEND_DOCUMENT = `http://${IP}:${PORT}/api/msg/pdf`;
+export const LINK_SEND_AUDIO = `http://${IP}:${PORT}/api/msg/audio`;

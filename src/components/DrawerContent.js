@@ -54,7 +54,7 @@ const DrawerContent = ({props: {navigation}}) => {
         dispatch(userExit());
         navigation.navigate('Login');
 
-        // store.getState().socketIO.socketIO.emit('dams')
+        // store.getState().socketIO.socketIO.emit('dams');
       },
     },
   ];

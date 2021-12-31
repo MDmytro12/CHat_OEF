@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {
   backColor,
@@ -10,29 +10,67 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useStore} from 'react-redux';
 import {formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
+import axios from 'axios';
+import {ERROR_INTERNET_CONNECTION} from '../constants/error';
+import {LINK_GET_USER_AVATAR} from '../constants/links';
 
-const ChatHeader = ({image, name, children, onPress, logoutAt}) => {
+const ChatHeader = ({onPress}) => {
   const store = useStore();
   const online = store.getState().dialog.currentPartnerOnline;
   const socketIO = store.getState().socketIO.socketIO;
   const [onlinee, setOnline] = useState(false);
+  const [partnerName, setPartnerName] = useState('');
+  const [partnerAvatar, setPartnerAvatar] = useState(
+    require('../assets/img/anonym.png'),
+  );
+
+  const [partnerLogout, setPartnerLogout] = useState(Date.now());
+
+  console.log('CHAT HEADR');
+
+  useEffect(() => {
+    async function fetchAvatar() {
+      const {data} = await axios
+        .post(
+          LINK_GET_USER_AVATAR,
+          {userId: store.getState().dialog.currentPartner},
+          {headers: {Authorization: store.getState().user.token}},
+        )
+        .catch(err => alert(ERROR_INTERNET_CONNECTION));
+      setPartnerAvatar(data);
+    }
+
+    fetchAvatar();
+    console.log('PARTNER AVATAR : ', partnerAvatar);
+  }, []);
 
   socketIO.on('giuo', ({online}) => {
-    if (online) {
-      console.log('User is online!');
-    } else {
-      console.log('User is not online!');
-    }
+    console.log('GET USER ONLINE');
     if (online !== onlinee) {
       setOnline(online);
     }
   });
 
+  socketIO.on('giulu', ({logoutAt}) => {
+    setPartnerLogout(logoutAt);
+  });
+
+  socketIO.on('giun', ({username}) => {
+    setPartnerName(username);
+  });
+
+  useEffect(() => {
+    socketIO.emit('gulu', {
+      dialogId: store.getState().dialog.currentDialog,
+      userId: store.getState().dialog.currentPartner,
+    });
+    socketIO.emit('gun', {userId: store.getState().dialog.currentPartner});
+  }, []);
+
   return (
     <CHC>
-      {children}
       <AIC>
-        <AI source={image} />
+        <AI source={partnerAvatar} />
         <IC>
           {onlinee && (
             <Icon name="offline-bolt" size={25} color={onlineColor} />
@@ -42,14 +80,18 @@ const ChatHeader = ({image, name, children, onPress, logoutAt}) => {
       </AIC>
       <InC>
         <FullName numberOfLines={1} ellipsizeMode="tail">
-          {name}
+          {partnerName}
         </FullName>
         {!onlinee && (
           <Time numberOfLines={1} ellipsizeMode="tail">
-            {logoutAt &&
-              formatDistance(window.Date.now(), new window.Date(logoutAt), {
-                locale: uk,
-              })}
+            {partnerLogout &&
+              formatDistance(
+                window.Date.now(),
+                new window.Date(partnerLogout),
+                {
+                  locale: uk,
+                },
+              )}
           </Time>
         )}
       </InC>

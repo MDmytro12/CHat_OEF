@@ -1,7 +1,17 @@
 import axios from 'axios';
+import {Alert} from 'react-native';
 import {call, takeEvery} from 'redux-saga/effects';
-import {LINK_SEND_IMAGE} from '../constants/links';
-import {SEND_MESSAGE_IMAGE} from '../constants/types';
+import {ERROR_INTERNET_CONNECTION} from '../constants/error';
+import {
+  LINK_SEND_AUDIO,
+  LINK_SEND_DOCUMENT,
+  LINK_SEND_IMAGE,
+} from '../constants/links';
+import {
+  SEND_MESSAGE_AUDIO,
+  SEND_MESSAGE_DOCUMENT,
+  SEND_MESSAGE_IMAGE,
+} from '../constants/types';
 
 // send image
 
@@ -28,17 +38,99 @@ function* sendImageWorker({payload}) {
     formData.append('dialogId', payload.dialogId);
     formData.append('img', payload.img);
 
-    const result = yield call(() =>
+    yield call(() =>
       fetchSendImage({
         formData,
         token: payload.token,
       }),
     );
-
-    console.log('SUCCESSFUL : ', result.data);
   } catch (err) {
-    console.log('ERROR : ', err);
+    Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
+      {
+        text: 'Зрозуміло',
+      },
+    ]);
   }
 }
 
-export {sendImageWatcher};
+// send document
+
+const fetchSendDocument = ({token, formData}) =>
+  axios({
+    method: 'POST',
+    url: LINK_SEND_DOCUMENT,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+    data: formData,
+  });
+
+function* sendDocumentWatcher() {
+  yield takeEvery(SEND_MESSAGE_DOCUMENT, sendDocumentWorker);
+}
+
+function* sendDocumentWorker({payload}) {
+  try {
+    let formData = new FormData();
+
+    formData.append('userId', payload.userId);
+    formData.append('partnerId', payload.partnerId);
+    formData.append('dialogId', payload.dialogId);
+    formData.append('pdf', payload.document);
+
+    yield call(() =>
+      fetchSendDocument({
+        formData,
+        token: payload.token,
+      }),
+    );
+  } catch (err) {
+    Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
+      {
+        text: 'Зрозуміло',
+      },
+    ]);
+  }
+}
+
+// send image
+
+const fetchSendAudio = ({token, formData}) =>
+  axios({
+    method: 'POST',
+    url: LINK_SEND_AUDIO,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+    data: formData,
+  });
+
+function* sendAudioWatcher() {
+  yield takeEvery(SEND_MESSAGE_AUDIO, sendAudioWorker);
+}
+
+function* sendAudioWorker({payload}) {
+  try {
+    let formData = new FormData();
+
+    formData.append('userId', payload.userId);
+    formData.append('partnerId', payload.partnerId);
+    formData.append('dialogId', payload.dialogId);
+    formData.append('audio', payload.audio);
+
+    yield call(() =>
+      fetchSendAudio({
+        formData,
+        token: payload.token,
+      }),
+    );
+  } catch (err) {
+    Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
+      {
+        text: 'Зрозуміло',
+      },
+    ]);
+  }
+}
+
+export {sendImageWatcher, sendAudioWatcher, sendDocumentWatcher};

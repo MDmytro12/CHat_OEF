@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Alert} from 'react-native';
 import {takeEvery, put, call} from 'redux-saga/effects';
 import {
   dialogError,
@@ -63,7 +64,9 @@ function* createDialogWorker({payload}) {
 // get all dialogs
 
 const fetchGetAllDialogs = ({token, userId}) =>
-  axios.post(LINK_GET_ALL_DIALOGS, {userId}, {headers: {Authorization: token}});
+  axios
+    .post(LINK_GET_ALL_DIALOGS, {userId}, {headers: {Authorization: token}})
+    .catch(err => Alert.alert("Помилка з'єднання!", ERROR_INTERNET_CONNECTION));
 
 function* getAllDialogsWatcher() {
   yield takeEvery(GET_ALL_DIALOGS, getAllDialogWorker);
@@ -72,7 +75,9 @@ function* getAllDialogsWatcher() {
 function* getAllDialogWorker({payload}) {
   try {
     yield put(dialogPending());
+
     const {data} = yield call(() => fetchGetAllDialogs(payload));
+
     yield put(setAllDialogs(data.dialogs));
 
     yield put(dialogSuccess());

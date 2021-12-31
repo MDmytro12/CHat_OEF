@@ -33,6 +33,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const DialogItemsView = ({navigation}) => {
+  console.log('DIALOG ITEM SCREEN');
   const store = useStore();
   const dispatch = useDispatch();
 
@@ -62,7 +63,9 @@ const DialogItemsView = ({navigation}) => {
   };
 
   const onRefreshHandler = () => {
-    dispatch(getAllDialog(store.getState().user.token , store.getState().user.userId));
+    dispatch(
+      getAllDialog(store.getState().user.token, store.getState().user.userId),
+    );
   };
 
   const onTextChangeHandler = textValue => {

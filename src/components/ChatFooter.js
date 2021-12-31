@@ -11,14 +11,15 @@ import {
   enableImageTyping,
   sendMessageImg,
 } from '../actions/message';
+import {hideSubMenu} from '../actions/dialog';
 
-const ChatFooter = ({partnerName, messageInfo}) => {
+const ChatFooter = ({messageInfo}) => {
   const store = useStore();
   const dispatch = useDispatch();
   const socketIO = store.getState().socketIO.socketIO;
   const [isTyping, setIsTyping] = useState(false);
-  const [iT, setIt] = useState(null);
   const [msgText, setMsgText] = useState('');
+  const [partnerName, setPartnerName] = useState('');
   const {
     isImage,
     isDocument,
@@ -34,6 +35,8 @@ const ChatFooter = ({partnerName, messageInfo}) => {
     setAudio,
   } = messageInfo;
 
+  console.log('CHAT FOOTER');
+
   socketIO.on('pt', ({userId}) => {
     if (userId !== store.getState().user.userId) {
       setIsTyping(true);
@@ -45,6 +48,10 @@ const ChatFooter = ({partnerName, messageInfo}) => {
   });
 
   const onFocusHandler = () => {
+    if (store.getState().dialog.menu) {
+      dispatch(hideSubMenu());
+    }
+
     socketIO.emit('pt', {
       dialogId: store.getState().dialog.currentDialog,
       userId: store.getState().user.userId,
@@ -76,7 +83,7 @@ const ChatFooter = ({partnerName, messageInfo}) => {
     };
 
     if (isImage) {
-      setIt(image);
+      setImage(image);
       dispatch(
         sendMessageImg(
           image,
@@ -104,12 +111,7 @@ const ChatFooter = ({partnerName, messageInfo}) => {
       };
     }
     console.log('MSG TEXT : ', msgText === '');
-    if (
-      !(isImage && msgText === '') ||
-      !(isDocument && msgText === '') ||
-      !(isAudio && msgText === '') ||
-      msgText !== ''
-    ) {
+    if (!isImage && msgText) {
       socketIO.emit('gnm', newMsg);
       setMsgText('');
     }

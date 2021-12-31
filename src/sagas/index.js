@@ -5,7 +5,11 @@ import {
   deleteDialogByIdWatcher,
   getAllDialogsWatcher,
 } from './dialog.saga';
-import {sendImageWatcher} from './message.saga';
+import {
+  sendAudioWatcher,
+  sendDocumentWatcher,
+  sendImageWatcher,
+} from './message.saga';
 import {searchUserWatcher} from './search.saga';
 import {
   changeUserAvatarWatcher,
@@ -25,5 +29,7 @@ export function* allWatchers() {
     getAllDialogsWatcher(),
     deleteDialogByIdWatcher(),
     sendImageWatcher(),
+    sendAudioWatcher(),
+    sendDocumentWatcher(),
   ]);
 }

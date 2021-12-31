@@ -7,12 +7,14 @@ import {
   DIALOG_PENDING,
   DIALOG_SUCCESS,
   GET_ALL_DIALOGS,
+  HIDE_SUB_MENU,
   SET_ALL_DIALOGS,
   SET_CURRENT_DIALOG_ID,
   SET_CURRENT_PARTNER,
   SET_PARTNER_ONLINE,
   SET_PARTNER_TYPING,
   SET_TIMER,
+  SHOW_SUB_MENU,
 } from '../constants/types';
 
 export const createDialog = (navigation, partnerId, token, userId) => ({
@@ -70,3 +72,7 @@ export const setPartnerTyping = isTyping => ({
 });
 
 export const clearPartnerData = () => ({type: CLEAR_PARTNER_DATA});
+
+export const showSubMenu = () => ({type: SHOW_SUB_MENU});
+
+export const hideSubMenu = () => ({type: HIDE_SUB_MENU});

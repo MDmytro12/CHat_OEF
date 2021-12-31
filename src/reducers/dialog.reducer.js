@@ -4,12 +4,14 @@ import {
   DIALOG_ERROR,
   DIALOG_PENDING,
   DIALOG_SUCCESS,
+  HIDE_SUB_MENU,
   SET_ALL_DIALOGS,
   SET_CURRENT_DIALOG_ID,
   SET_CURRENT_PARTNER,
   SET_PARTNER_ONLINE,
   SET_PARTNER_TYPING,
   SET_TIMER,
+  SHOW_SUB_MENU,
 } from '../constants/types';
 
 const initialState = {
@@ -19,7 +21,7 @@ const initialState = {
   currentPartner: null,
   currentPartnerOnline: false,
   currentPartnerTyping: false,
-  timer: null,
+  menu: false,
 };
 
 export const dialogReducer = (state = initialState, {type, payload}) => {
@@ -73,15 +75,15 @@ export const dialogReducer = (state = initialState, {type, payload}) => {
         currentPartnerOnline: false,
         currentPartnerTyping: false,
       };
-    case SET_TIMER:
+    case SHOW_SUB_MENU:
       return {
         ...state,
-        timer: payload,
+        menu: true,
       };
-    case CLEAR_TIMER:
+    case HIDE_SUB_MENU:
       return {
         ...state,
-        timer: null,
+        menu: false,
       };
     default:
       return state;
