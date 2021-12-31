@@ -9,6 +9,7 @@ import {detectPartnerId} from '../utils/detecionUtil';
 import Avatar from './Avatar';
 import {format, formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
+import {decryptText} from '../utils/Encryption';
 
 const DialogItem = ({dialogItemInfo, onPress}) => {
   const store = useStore();
@@ -40,6 +41,10 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
         )
         .then(res => setPartnerAvatar(res.data))
         .catch(err => alert(ERROR_INTERNET_CONNECTION));
+
+      if (typeof msg === 'object') {
+        msg.textContent = await decryptText(msg.textContent, msg.authorId);
+      }
     }
     getPartnerAvatar();
   }, []);
@@ -73,7 +78,7 @@ const Date = styled.Text`
 
 const DContainer = styled.View`
   position: absolute;
-  top: 97%;
+  top: 1s0%;
   right: 5%;
 `;
 

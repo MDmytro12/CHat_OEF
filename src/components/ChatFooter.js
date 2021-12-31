@@ -103,10 +103,17 @@ const ChatFooter = ({partnerName, messageInfo}) => {
         audioContent: audio,
       };
     }
+    console.log('MSG TEXT : ', msgText === '');
+    if (
+      !(isImage && msgText === '') ||
+      !(isDocument && msgText === '') ||
+      !(isAudio && msgText === '') ||
+      msgText !== ''
+    ) {
+      socketIO.emit('gnm', newMsg);
+      setMsgText('');
+    }
 
-    socketIO.emit('gnm', newMsg);
-
-    setMsgText('');
     setIsAudio(false);
     setIsImage(false);
     setIsDocument(false);
