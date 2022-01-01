@@ -13,3 +13,4 @@ export {default as MessageImage} from './ImageMessage';
 export {default as SearchUser} from './SearchUser';
 export {default as ChatMain} from './ChatMain';
 export {default as SubMenu} from './SubMenu';
+export {default as ContentFile} from './ContentFile';

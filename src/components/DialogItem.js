@@ -10,6 +10,9 @@ import Avatar from './Avatar';
 import {format, formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
 import {decryptText} from '../utils/Encryption';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {View} from 'react-native';
+import {ContentFile} from '.';
 
 const DialogItem = ({dialogItemInfo, onPress}) => {
   const store = useStore();
@@ -30,7 +33,6 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
         sendedAt: window.Date.now(),
       }
     : message;
-  console.log('DIALOG ITEM!');
 
   React.useEffect(() => {
     async function getPartnerAvatar() {
@@ -71,9 +73,23 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
         <FullName numberOfLines={1} ellipsizeMode="tail">
           {user.username}
         </FullName>
-        <MessageContent numberOfLines={2} ellipsizeMode="tail">
-          {msg.textContent}
-        </MessageContent>
+        {msg.textContent ? (
+          <MessageContent numberOfLines={2} ellipsizeMode="tail">
+            {msg.textContent}
+          </MessageContent>
+        ) : (
+          <></>
+        )}
+
+        {msg.isImage && (
+          <ContentFile iconName={'file-image-outline'} text={'Зображення'} />
+        )}
+        {msg.isDocument && (
+          <ContentFile iconName={'file-document'} text="Документ" />
+        )}
+        {msg.isAudio && (
+          <ContentFile iconName={'file-music'} text={'Аудіофайл'} />
+        )}
       </IContainer>
     </DIContainer>
   );
@@ -86,7 +102,7 @@ const Date = styled.Text`
 
 const DContainer = styled.View`
   position: absolute;
-  top: 10%;
+  top: 97%;
   right: 5%;
 `;
 

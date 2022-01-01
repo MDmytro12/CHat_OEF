@@ -39,10 +39,13 @@ const ChatHeader = ({onPress}) => {
         .catch(err => alert(ERROR_INTERNET_CONNECTION));
       setPartnerAvatar(data);
     }
-
+    socketIO.emit('gulu', {
+      dialogId: store.getState().dialog.currentDialog,
+      userId: store.getState().dialog.currentPartner,
+    });
+    socketIO.emit('gun', {userId: store.getState().dialog.currentPartner});
     fetchAvatar();
-    console.log('PARTNER AVATAR : ', partnerAvatar);
-  }, []);
+  }, [store.getState().dialog.currentPartner]);
 
   socketIO.on('giuo', ({online}) => {
     console.log('GET USER ONLINE');
@@ -58,14 +61,6 @@ const ChatHeader = ({onPress}) => {
   socketIO.on('giun', ({username}) => {
     setPartnerName(username);
   });
-
-  useEffect(() => {
-    socketIO.emit('gulu', {
-      dialogId: store.getState().dialog.currentDialog,
-      userId: store.getState().dialog.currentPartner,
-    });
-    socketIO.emit('gun', {userId: store.getState().dialog.currentPartner});
-  }, []);
 
   return (
     <CHC>

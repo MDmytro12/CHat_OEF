@@ -9,33 +9,20 @@ import {useDispatch} from 'react-redux';
 import {
   disableImgTyping,
   enableImageTyping,
+  sendMessageAudio,
+  sendMessageDocument,
   sendMessageImg,
+  setMsgAudio,
 } from '../actions/message';
-import {hideSubMenu} from '../actions/dialog';
+import {disableSubMenu, enableSubMenu, hideSubMenu} from '../actions/dialog';
 
-const ChatFooter = ({messageInfo}) => {
+const ChatFooter = ({}) => {
   const store = useStore();
   const dispatch = useDispatch();
   const socketIO = store.getState().socketIO.socketIO;
   const [isTyping, setIsTyping] = useState(false);
   const [msgText, setMsgText] = useState('');
   const [partnerName, setPartnerName] = useState('');
-  const {
-    isImage,
-    isDocument,
-    isAudio,
-    document,
-    image,
-    audio,
-    setIsImage,
-    setIsAudio,
-    setIsDocument,
-    setDocument,
-    setImage,
-    setAudio,
-  } = messageInfo;
-
-  console.log('CHAT FOOTER');
 
   socketIO.on('pt', ({userId}) => {
     if (userId !== store.getState().user.userId) {
@@ -56,6 +43,8 @@ const ChatFooter = ({messageInfo}) => {
       dialogId: store.getState().dialog.currentDialog,
       userId: store.getState().user.userId,
     });
+
+    dispatch(disableSubMenu());
   };
 
   const onBlurHandler = () => {
@@ -63,9 +52,12 @@ const ChatFooter = ({messageInfo}) => {
       dialogId: store.getState().dialog.currentDialog,
       userId: store.getState().user.userId,
     });
+
+    dispatch(enableSubMenu());
   };
 
   const onPressHandler = async () => {
+    console.log(store.getState().message);
     let et = await encryptText(msgText, store.getState().user.userId);
 
     let newMsg = {
@@ -82,11 +74,11 @@ const ChatFooter = ({messageInfo}) => {
       imageContent: [],
     };
 
-    if (isImage) {
-      setImage(image);
+    if ('uri' in store.getState().message.image) {
+      console.log('SEND IMAGE');
       dispatch(
         sendMessageImg(
-          image,
+          store.getState().message.image,
           store.getState().user.userId,
           store.getState().dialog.currentPartner,
           store.getState().dialog.currentDialog,
@@ -95,33 +87,36 @@ const ChatFooter = ({messageInfo}) => {
       );
     }
 
-    if (isDocument) {
-      newMsg = {
-        ...newMsg,
-        isDocument,
-        documentContent: document,
-      };
+    if ('uri' in store.getState().message.document) {
+      console.log('SEND DOCUMENT');
+      dispatch(
+        sendMessageDocument(
+          store.getState().message.document,
+          store.getState().user.userId,
+          store.getState().dialog.currentPartner,
+          store.getState().dialog.currentDialog,
+          store.getState().user.token,
+        ),
+      );
     }
 
-    if (isAudio) {
-      newMsg = {
-        ...newMsg,
-        isAudio,
-        audioContent: audio,
-      };
+    if ('uri' in store.getState().message.audio) {
+      console.log('SEND AUDIO');
+      dispatch(
+        sendMessageAudio(
+          store.getState().message.audio,
+          store.getState().user.userId,
+          store.getState().dialog.currentPartner,
+          store.getState().dialog.currentDialog,
+          store.getState().user.token,
+        ),
+      );
     }
-    console.log('MSG TEXT : ', msgText === '');
-    if (!isImage && msgText) {
+
+    if (msgText) {
       socketIO.emit('gnm', newMsg);
       setMsgText('');
     }
-
-    setIsAudio(false);
-    setIsImage(false);
-    setIsDocument(false);
-    setAudio({});
-    setDocument({});
-    setImage({});
 
     dispatch(disableImgTyping());
   };
@@ -131,9 +126,29 @@ const ChatFooter = ({messageInfo}) => {
       {isTyping && <Typing partnerName={partnerName} />}
       {store.getState().message.imageTyping && (
         <SIC>
-          <SII source={{uri: image.uri}} />
+          <SII source={{uri: store.getState().message.image.uri}} />
           <SIT numberOfLines={1} ellipsizeMode="tail">
-            {image.name}fewefwefwefwefewfwefw
+            {store.getState().message.image.name}
+          </SIT>
+        </SIC>
+      )}
+      {store.getState().message.documentTyping && (
+        <SIC>
+          <SIIC>
+            <Icon name="insert-drive-file" size={40} color={colorFont} />
+          </SIIC>
+          <SIT numberOfLines={1} ellipsizeMode="tail">
+            {store.getState().message.document.name}
+          </SIT>
+        </SIC>
+      )}
+      {store.getState().message.audioTyping && (
+        <SIC>
+          <SIIC>
+            <Icon name="music-note" size={40} color={colorFont} />
+          </SIIC>
+          <SIT numberOfLines={1} ellipsizeMode="tail">
+            {store.getState().message.audio.name}
           </SIT>
         </SIC>
       )}
@@ -153,12 +168,25 @@ const ChatFooter = ({messageInfo}) => {
   );
 };
 
+const SIIC = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 57px;
+  height: 57px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 100px;
+`;
+
 const SIT = styled.Text`
   width: 70%;
   font-size: 20px;
   letter-spacing: 1px;
   color: ${colorFont};
-  text-align: center;
+  text-align: left;
+  font-weight: 800;
+  letter-spacing: 1px;
 `;
 
 const SII = styled.Image`

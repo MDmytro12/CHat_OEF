@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {
   backColor,
@@ -9,13 +9,13 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {MessageAudio, MessageDocument, MessageImage} from '.';
 import {useDispatch, useStore} from 'react-redux';
-import axios from 'axios';
-import {LINK_GET_USER_AVATAR} from '../constants/links';
-import {format, formatDistance} from 'date-fns';
+import {formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
 import {decryptText} from '../utils/Encryption';
+import InView from 'react-native-component-inview';
 
 const Message = ({
+  _id,
   authorId,
   textContent,
   isImage,
@@ -27,13 +27,14 @@ const Message = ({
   readed,
   avatarURI,
   sendedAt,
+  scrollInfo,
+  read,
 }) => {
   const store = useStore();
-  const dispatch = useDispatch();
 
   const isMe = authorId._id === store.getState().user.userId;
   const secret = isMe ? authorId._id : store.getState().user.userId;
-
+  const [oY, setOy] = useState(0);
   const [decryptedText, setDecryptedText] = React.useState('');
 
   React.useEffect(() => {
@@ -45,8 +46,33 @@ const Message = ({
     dT();
   }, []);
 
+  React.useEffect(() => {
+    if (
+      scrollInfo.height !== 0 &&
+      scrollInfo.offsetY !== 0 &&
+      readed === false &&
+      read
+    ) {
+      if (
+        (scrollInfo.offsetY + 20 < oY &&
+          oY < scrollInfo.offsetY + scrollInfo.screen - 10) ||
+        scrollInfo.offsetY < scrollInfo.screen
+      ) {
+        console.log('SEND!', _id);
+        store.getState().socketIO.socketIO.emit('smrd', {
+          dialogId: store.getState().dialog.currentDialog,
+          msgId: _id,
+        });
+      }
+    }
+  }, [scrollInfo]);
+
   return (
-    <MC isMe={isMe}>
+    <MC
+      onLayout={({nativeEvent}) => {
+        setOy(nativeEvent.layout.y);
+      }}
+      isMe={isMe}>
       <MTC isMe={isMe}>
         {textContent.length !== 0 && <MT>{decryptedText}</MT>}
         {isImage &&
@@ -60,17 +86,20 @@ const Message = ({
           ))}
         {isDocument &&
           documentContent.map((item, index) => (
-            <MessageDocument key={index * 67} name={item.name} />
+            <MessageDocument key={index * 67} name={item} />
           ))}
         {isAudio &&
           audioContent.map((item, index) => (
-            <MessageAudio name={item.name} key={index * 67} />
+            <MessageAudio name={item} key={index * 67} />
           ))}
       </MTC>
       <ILC>
         <IRC isMe={isMe}>
-          {!readed && <Icon name="done" size={25} color="black" />}
-          {readed && <Icon name="done-all" size={25} color="black" />}
+          {readed === false ? (
+            <Icon name="done" size={25} color="black" />
+          ) : (
+            <Icon name="done-all" size={25} color="black" />
+          )}
         </IRC>
         {!isMe && (
           <AC>

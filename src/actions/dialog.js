@@ -6,6 +6,8 @@ import {
   DIALOG_ERROR,
   DIALOG_PENDING,
   DIALOG_SUCCESS,
+  DISABLE_SUB_MENU,
+  ENABLE_SUB_MENU,
   GET_ALL_DIALOGS,
   HIDE_SUB_MENU,
   SET_ALL_DIALOGS,
@@ -76,3 +78,7 @@ export const clearPartnerData = () => ({type: CLEAR_PARTNER_DATA});
 export const showSubMenu = () => ({type: SHOW_SUB_MENU});
 
 export const hideSubMenu = () => ({type: HIDE_SUB_MENU});
+
+export const disableSubMenu = () => ({type: DISABLE_SUB_MENU});
+
+export const enableSubMenu = () => ({type: ENABLE_SUB_MENU});

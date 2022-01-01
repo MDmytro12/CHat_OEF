@@ -7,7 +7,7 @@ import {useStore, useDispatch} from 'react-redux';
 import {ActivityIndicator} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import {changeUserAvatar, toggleScreen, userExit} from '../actions/user';
-import {clearInt, getAllDialog} from '../actions/dialog';
+import {clearInt, getAllDialog, setCurrentPartnerId} from '../actions/dialog';
 
 const DrawerContent = ({props: {navigation}}) => {
   const store = useStore();
@@ -18,13 +18,14 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Діалоги',
       iconName: 'chat-bubble-outline',
       onPress: () => {
-        dispatch(toggleScreen(store.getState().user.toggle));
+        dispatch(toggleScreen(!store.getState().user.toggle));
         dispatch(
           getAllDialog(
             store.getState().user.token,
             store.getState().user.userId,
           ),
         );
+        dispatch(setCurrentPartnerId(store.getState().user.userId));
 
         store.getState().socketIO.socketIO.emit('gam', {
           dialogId: store.getState().dialog.currentDialog,
@@ -36,7 +37,7 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Редагувати профіль ',
       iconName: 'mode-edit',
       onPress: () => {
-        dispatch(toggleScreen(store.getState().user.toggle));
+        dispatch(toggleScreen(!store.getState().user.toggle));
         navigation.navigate('Setting');
       },
     },
@@ -44,17 +45,17 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Покинути чат',
       iconName: 'exit-to-app',
       onPress: () => {
-        store.getState().socketIO.socketIO.emit('suof', {
-          userId: store.getState().user.userId,
-        });
-        store.getState().socketIO.socketIO.emit('sulu', {
-          logoutAt: new window.Date(),
-          userId: store.getState().user.userId,
-        });
-        dispatch(userExit());
-        navigation.navigate('Login');
+        // store.getState().socketIO.socketIO.emit('suof', {
+        //   userId: store.getState().user.userId,
+        // });
+        // store.getState().socketIO.socketIO.emit('sulu', {
+        //   logoutAt: new window.Date(),
+        //   userId: store.getState().user.userId,
+        // });
+        // dispatch(userExit());
+        // navigation.navigate('Login');
 
-        // store.getState().socketIO.socketIO.emit('dams');
+        store.getState().socketIO.socketIO.emit('dams');
       },
     },
   ];

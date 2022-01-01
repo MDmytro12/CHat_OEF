@@ -11,7 +11,7 @@ const MessageAudio = ({name}) => {
           <Icon name="audiotrack" color={'white'} size={25} />
         </IC>
         <AN numberOfLines={1} ellipsizeMode="tail">
-          {name}
+          {name.uri.split('/').pop()}
         </AN>
       </MAC>
     </MAW>

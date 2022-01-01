@@ -6,12 +6,18 @@ import {
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
   SEND_MESSAGE_IMAGE,
+  SET_MSG_AUDIO,
+  SET_MSG_DOCUMENT,
+  SET_MSG_IMAGE,
 } from '../constants/types';
 
 const initialState = {
   imageTyping: false,
   documentTyping: false,
   audioTyping: false,
+  image: {},
+  document: {},
+  audio: {},
 };
 
 export const messageReducer = (state = initialState, {type, payload}) => {
@@ -45,6 +51,21 @@ export const messageReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         audioTyping: false,
+      };
+    case SET_MSG_IMAGE:
+      return {
+        ...state,
+        image: payload.image,
+      };
+    case SET_MSG_AUDIO:
+      return {
+        ...state,
+        audio: payload.audio,
+      };
+    case SET_MSG_DOCUMENT:
+      return {
+        ...state,
+        document: payload.document,
       };
     default:
       return state;

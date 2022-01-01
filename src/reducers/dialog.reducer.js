@@ -4,6 +4,8 @@ import {
   DIALOG_ERROR,
   DIALOG_PENDING,
   DIALOG_SUCCESS,
+  DISABLE_SUB_MENU,
+  ENABLE_SUB_MENU,
   HIDE_SUB_MENU,
   SET_ALL_DIALOGS,
   SET_CURRENT_DIALOG_ID,
@@ -22,6 +24,7 @@ const initialState = {
   currentPartnerOnline: false,
   currentPartnerTyping: false,
   menu: false,
+  submenu: true,
 };
 
 export const dialogReducer = (state = initialState, {type, payload}) => {
@@ -84,6 +87,16 @@ export const dialogReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         menu: false,
+      };
+    case DISABLE_SUB_MENU:
+      return {
+        ...state,
+        submenu: false,
+      };
+    case ENABLE_SUB_MENU:
+      return {
+        ...state,
+        submenu: true,
       };
     default:
       return state;

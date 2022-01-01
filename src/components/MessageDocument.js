@@ -11,7 +11,7 @@ const MessageDocument = ({name}) => {
           <Icon name="description" size={25} color="white" />
         </IC>
         <DN numberOfLines={1} ellipsizeMode="tail">
-          {name}
+          {name.uri.split('/').pop()}
         </DN>
       </MDC>
     </MDW>

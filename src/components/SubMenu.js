@@ -5,27 +5,56 @@ import {backColor, colorFont} from '../constants/style';
 import DocumentPicker from 'react-native-document-picker';
 import {useDispatch, useStore} from 'react-redux';
 import {
+  disableAudioType,
+  disableDocumentType,
+  disableImgTyping,
   enableAudioType,
   enableDocumentType,
   enableImageTyping,
+  setMsgAudio,
+  setMsgDocument,
+  setMsgImage,
 } from '../actions/message';
 import {hideSubMenu} from '../actions/dialog';
 import {Alert} from 'react-native';
 
-const SubMenu = ({fileInfo}) => {
-  const [smp, setSmp] = useState('bottom: 51%; right: 10%;');
-
+const SubMenu = ({}) => {
   const dispatch = useDispatch();
   const store = useStore();
 
-  const {
-    setIsAudio,
-    setIsDocument,
-    setIsImage,
-    setImage,
-    setDocument,
-    setAudio,
-  } = fileInfo;
+  const image = store.getState().message.image;
+  const doc = store.getState().message.document;
+  const audio = store.getState().message.audio;
+
+  const checkImage = () => {
+    if (image !== {}) {
+      dispatch(setMsgImage({}));
+
+      if (store.getState().message.imageTyping) {
+        dispatch(disableImgTyping());
+      }
+    }
+  };
+
+  const checkAudio = () => {
+    if (audio !== {}) {
+      dispatch(setMsgAudio({}));
+
+      if (store.getState().message.audioTyping) {
+        dispatch(disableAudioType());
+      }
+    }
+  };
+
+  const checkDocument = () => {
+    if (doc !== {}) {
+      dispatch(setMsgDocument({}));
+
+      if (store.getState().message.documentTyping) {
+        dispatch(disableDocumentType());
+      }
+    }
+  };
 
   const FilePicker = async type => {
     try {
@@ -36,25 +65,28 @@ const SubMenu = ({fileInfo}) => {
       switch (type) {
         case 'images':
           {
-            setIsImage(true);
-            setImage(res[0]);
+            checkAudio();
+            checkDocument();
 
+            dispatch(setMsgImage(res[0]));
             dispatch(enableImageTyping());
           }
           break;
         case 'pdf':
           {
-            setIsDocument(true);
-            setDocument(res[0]);
+            checkImage();
+            checkAudio();
 
+            dispatch(setMsgDocument(res[0]));
             dispatch(enableDocumentType());
           }
           break;
         case 'audio':
           {
-            setIsAudio(true);
-            setAudio(res[0]);
+            checkDocument();
+            checkImage();
 
+            dispatch(setMsgAudio(res[0]));
             dispatch(enableAudioType());
           }
           break;
@@ -101,7 +133,7 @@ const SubMenu = ({fileInfo}) => {
   ];
 
   return (
-    <SMC smp={smp}>
+    <SMC>
       {SubMenuItemsInfo.map((item, index) => (
         <SMI
           onPress={() => {
@@ -138,7 +170,8 @@ const SMC = styled.View`
   position: absolute;
   border-radius: 30px;
   border-top-right-radius: 0px;
-  ${({smp}) => smp}
+  top: 11%;
+  right: 13%;
   padding: 25px;
   z-index: 1113;
 `;

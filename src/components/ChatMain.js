@@ -6,22 +6,29 @@ import {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Message} from '.';
 import {colorFont, dateColor} from '../constants/style';
+import InView from 'react-native-component-inview';
 
 const ChatMain = () => {
   const scrollViewRef = useRef();
   const store = useStore();
   const dispatch = useDispatch();
+  const [read, setRead] = useState(false);
 
   const [messages, setMessages] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [scrollInfo, setScrollInfo] = useState({
+    height: 0,
+    offsetY: 0,
+  });
   const [partnerAvatar, setPArtnerAvatar] = useState(
     require('../assets/img/anonym.png'),
   );
 
   const socketIO = store.getState().socketIO.socketIO;
 
-  console.log('CHAT MAIN');
+  useEffect(() => {
+    setMessages([]);
+  }, [store.getState().dialog.currentPartner]);
 
   useEffect(() => {
     async function fetchAvatar() {
@@ -34,9 +41,11 @@ const ChatMain = () => {
         .catch(err => alert(ERROR_INTERNET_CONNECTION));
       setPartnerAvatar(data);
     }
+
     setIsLoading(true);
+
     socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
-  }, []);
+  }, [store.getState().dialog.currentPartner]);
 
   socketIO.on('giam', allMessages => {
     if (allMessages.length > messages.length) {
@@ -44,7 +53,6 @@ const ChatMain = () => {
     }
 
     setIsLoading(false);
-    console.log('GIVE YOU ALL MESAGES ');
   });
 
   socketIO.on('anm', newMessage => {
@@ -55,9 +63,43 @@ const ChatMain = () => {
     socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
   });
 
+  function handleInfinityScroll(event) {
+    let mHeight = event.nativeEvent.layoutMeasurement.height;
+    let cSize = event.nativeEvent.contentSize.height;
+    let Y = event.nativeEvent.contentOffset.y;
+    if (Math.ceil(mHeight + Y) >= cSize) return true;
+    return false;
+  }
+
+  socketIO.on('gimrd', ({msgId}) => {
+    let newMessages = messages.map(item => {
+      if (msgId === item._id) {
+        return {
+          ...item,
+          readed: true,
+        };
+      } else {
+        return item;
+      }
+    });
+
+    setMessages(newMessages);
+  });
+
   return (
     <CMC
       ref={scrollViewRef}
+      onScroll={e => {
+        const screenHeight = e.nativeEvent.layoutMeasurement.height;
+        const offsetY = e.nativeEvent.contentOffset.y;
+        setScrollInfo({
+          offsetY,
+          screen: screenHeight,
+        });
+        if (handleInfinityScroll(e)) {
+          setRead(true);
+        }
+      }}
       onContentSizeChange={() =>
         scrollViewRef.current.scrollToEnd({animated: true})
       }>
@@ -70,6 +112,7 @@ const ChatMain = () => {
           color={colorFont}
         />
       )}
+
       {!isLoading && (
         <>
           {messages.length === 0 && (
@@ -89,10 +132,17 @@ const ChatMain = () => {
               <Icon name="group" size={300} color={colorFont} />
             </EMC>
           )}
+
           {messages.length > 0 &&
             messages.map((item, index) => {
               return (
-                <Message key={index * 89} avatarURI={partnerAvatar} {...item} />
+                <Message
+                  scrollInfo={scrollInfo}
+                  key={index * 89}
+                  avatarURI={partnerAvatar}
+                  {...item}
+                  read={read}
+                />
               );
             })}
         </>

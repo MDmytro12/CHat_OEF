@@ -19,6 +19,7 @@ import {
   setCurrentPartnerId,
 } from '../actions/dialog';
 import {detectPartnerId} from '../utils/detecionUtil';
+import {toggleScreen} from '../actions/user';
 
 const mapStateToProps = state => {
   return {
@@ -33,7 +34,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const DialogItemsView = ({navigation}) => {
-  console.log('DIALOG ITEM SCREEN');
   const store = useStore();
   const dispatch = useDispatch();
 
@@ -41,13 +41,15 @@ const DialogItemsView = ({navigation}) => {
   const [SIlist, setSIlist] = useState(store.getState().dialog.allDialogs);
   const [refreshing, setRefreshing] = useState(false);
 
-  const DIlist = store.getState().dialog.allDialogs;
-
   React.useEffect(() => {
     dispatch(
       getAllDialog(store.getState().user.token, store.getState().user.userId),
     );
   }, []);
+
+  React.useEffect(() => {
+    setSIlist(store.getState().dialog.allDialogs);
+  }, [store.getState().dialog.allDialogs]);
 
   const DialogItemHandler = item => {
     let partnerId =
@@ -55,6 +57,7 @@ const DialogItemsView = ({navigation}) => {
         .user._id;
     dispatch(setCurrentDialog(item._id));
     dispatch(setCurrentPartnerId(partnerId));
+    dispatch(toggleScreen());
     navigation.navigate('ChatRoom');
   };
 
@@ -70,11 +73,12 @@ const DialogItemsView = ({navigation}) => {
 
   const onTextChangeHandler = textValue => {
     if (textValue === '') {
-      dispatch(setAllDialogs(SIlist));
+      setSIlist(store.getState().dialog.allDialogs);
     } else {
-      dispatch(
-        setAllDialogs(
-          SIlist.filter(item =>
+      setSIlist(
+        store
+          .getState()
+          .dialog.allDialogs.filter(item =>
             item.authors[
               detectPartnerId(item.authors, store.getState().user.userId)
             ].user.username
@@ -82,7 +86,6 @@ const DialogItemsView = ({navigation}) => {
               .trim()
               .includes(textValue.toLowerCase().trim()),
           ),
-        ),
       );
     }
   };
@@ -112,14 +115,14 @@ const DialogItemsView = ({navigation}) => {
         )}
         {!store.getState().dialog.isLoading && (
           <>
-            {DIlist.length === 0 && (
+            {SIlist.length === 0 && (
               <DIEC>
                 <Icon name="drafts" color={colorFont} size={250} />
                 <ET>Список діалогів пустий ...</ET>
               </DIEC>
             )}
-            {DIlist.length !== 0 &&
-              DIlist.map((item, index) => (
+            {SIlist.length !== 0 &&
+              SIlist.map((item, index) => (
                 <Swipeable
                   key={index * 122}
                   rightButtonWidth={200}

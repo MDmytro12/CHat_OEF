@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MessageImage = ({image, first, last}) => {
-  console.log('image ', image);
   return (
     <MIW>
       <MIC>

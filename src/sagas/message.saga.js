@@ -1,6 +1,14 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
-import {call, takeEvery} from 'redux-saga/effects';
+import {call, put, takeEvery} from 'redux-saga/effects';
+import {
+  disableAudioType,
+  disableDocumentType,
+  disableImgTyping,
+  setMsgAudio,
+  setMsgDocument,
+  setMsgImage,
+} from '../actions/message';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
 import {
   LINK_SEND_AUDIO,
@@ -44,7 +52,11 @@ function* sendImageWorker({payload}) {
         token: payload.token,
       }),
     );
+
+    yield put(disableImgTyping());
+    yield put(setMsgImage({}));
   } catch (err) {
+    console.log('ERROR image : ', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',
@@ -84,7 +96,11 @@ function* sendDocumentWorker({payload}) {
         token: payload.token,
       }),
     );
+
+    yield put(disableDocumentType());
+    yield put(setMsgDocument({}));
   } catch (err) {
+    console.log('ERROR document', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',
@@ -124,7 +140,11 @@ function* sendAudioWorker({payload}) {
         token: payload.token,
       }),
     );
+
+    yield put(disableAudioType());
+    yield put(setMsgAudio({}));
   } catch (err) {
+    console.log('ERROR audio : ', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',

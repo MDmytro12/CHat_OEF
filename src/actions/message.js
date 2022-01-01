@@ -8,6 +8,9 @@ import {
   SEND_MESSAGE_AUDIO,
   SEND_MESSAGE_DOCUMENT,
   SEND_MESSAGE_IMAGE,
+  SET_MSG_AUDIO,
+  SET_MSG_DOCUMENT,
+  SET_MSG_IMAGE,
 } from '../constants/types';
 
 export const sendMessageImg = (img, userId, partnerId, dialogId, token) => ({
@@ -66,3 +69,24 @@ export const sendMessageAudio = (
 export const disableAudioType = () => ({type: DISABLE_AUDIO_TYPE});
 
 export const enableAudioType = () => ({type: ENABLE_AUDIO_TYPE});
+
+export const setMsgImage = image => ({
+  type: SET_MSG_IMAGE,
+  payload: {
+    image,
+  },
+});
+
+export const setMsgAudio = audio => ({
+  type: SET_MSG_AUDIO,
+  payload: {
+    audio,
+  },
+});
+
+export const setMsgDocument = document => ({
+  type: SET_MSG_DOCUMENT,
+  payload: {
+    document,
+  },
+});
