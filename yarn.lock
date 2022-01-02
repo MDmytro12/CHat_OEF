@@ -6444,6 +6444,10 @@
   "resolved" "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz"
   "version" "0.3.1"
 
+"react-native-sound@git+ssh://git@github.com:zmxv/react-native-sound.git#HEAD":
+  "resolved" "git+ssh://git@github.com/zmxv/react-native-sound.git#ad9880957fa1e9c3c81f1c5d44c77142c55d6084"
+  "version" "0.11.1"
+
 "react-native-swipeable@^0.6.0":
   "integrity" "sha512-OJUmOtPAZ3s6OHdbmGdGBq3oNZaUFOV81UMQfO2fvIF2cUOMbjUKQCRU7EhijEyufiaMAlSu/VguCRAdLRLk3w=="
   "resolved" "https://registry.npmjs.org/react-native-swipeable/-/react-native-swipeable-0.6.0.tgz"
@@ -6479,7 +6483,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>=0.44.0", "react-native@0.66.4":
+"react-native@*", "react-native@>=0.44.0", "react-native@>=0.8.0", "react-native@0.66.4":
   "integrity" "sha512-9vx5dlSfQlKbbDtr8+xMon6qsmSu7jvjdXWZpEKh3XVKpUidbbODv7048gwVKX8YAel1egeR7hN8vzSeI6ssTw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.4.tgz"
   "version" "0.66.4"
