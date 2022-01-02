@@ -8,7 +8,10 @@ import {
 import {
   sendAudioWatcher,
   sendDocumentWatcher,
+  sendGetAllMessagesWatcher,
   sendImageWatcher,
+  sendNewMessageWatcher,
+  sendReadedWatcher,
 } from './message.saga';
 import {searchUserWatcher} from './search.saga';
 import {
@@ -31,5 +34,8 @@ export function* allWatchers() {
     sendImageWatcher(),
     sendAudioWatcher(),
     sendDocumentWatcher(),
+    sendReadedWatcher(),
+    sendNewMessageWatcher(),
+    sendGetAllMessagesWatcher(),
   ]);
 }

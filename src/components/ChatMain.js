@@ -6,29 +6,72 @@ import {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Message} from '.';
 import {colorFont, dateColor} from '../constants/style';
-import InView from 'react-native-component-inview';
+import axios from 'axios';
+import {LINK_GET_USER_AVATAR} from '../constants/links';
+import {getAllMessages, setAllMessages} from '../actions/message';
 
 const ChatMain = () => {
+  console.log('CHAT MAIN');
   const scrollViewRef = useRef();
   const store = useStore();
   const dispatch = useDispatch();
   const [read, setRead] = useState(false);
 
-  const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [scrollInfo, setScrollInfo] = useState({
-    height: 0,
+    screen: 0,
     offsetY: 0,
   });
-  const [partnerAvatar, setPArtnerAvatar] = useState(
+  const [partnerAvatar, setPartnerAvatar] = useState(
     require('../assets/img/anonym.png'),
   );
 
   const socketIO = store.getState().socketIO.socketIO;
 
+  socketIO.on('ginm', msg => {
+    let i = false;
+    store.getState().message.allMessages.forEach(m => {
+      if (m._id === msg._id) {
+        i = true;
+        return {...m, readed: true};
+      } else {
+        return m;
+      }
+    });
+
+    if (!i) {
+      dispatch(setAllMessages([...store.getState().message.allMessages, msg]));
+    }
+  });
+
+  socketIO.on('gimrd', ({msgId}) => {
+    let i = false;
+    let newMsgs = store.getState().message.allMessages.map(m => {
+      if (m._id === msgId) {
+        if (!m.readed) {
+          i = true;
+          return {
+            ...m,
+            readed: true,
+          };
+        }
+      } else {
+        return m;
+      }
+    });
+
+    if (i) {
+      dispatch(setAllMessages(newMsgs));
+    }
+  });
+
   useEffect(() => {
-    setMessages([]);
-  }, [store.getState().dialog.currentPartner]);
+    setRead(false);
+    setScrollInfo({
+      screen: 0,
+      offsetY: 0,
+    });
+  }, [store.getState().dialog.currentPartner, store.getState().user.toggle]);
 
   useEffect(() => {
     async function fetchAvatar() {
@@ -42,26 +85,10 @@ const ChatMain = () => {
       setPartnerAvatar(data);
     }
 
-    setIsLoading(true);
+    dispatch(getAllMessages(store.getState().dialog.currentDialog));
 
-    socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
+    fetchAvatar();
   }, [store.getState().dialog.currentPartner]);
-
-  socketIO.on('giam', allMessages => {
-    if (allMessages.length > messages.length) {
-      setMessages(allMessages);
-    }
-
-    setIsLoading(false);
-  });
-
-  socketIO.on('anm', newMessage => {
-    setMessages([...messages, newMessage]);
-  });
-
-  socketIO.on('gimsg', () => {
-    socketIO.emit('gam', {dialogId: store.getState().dialog.currentDialog});
-  });
 
   function handleInfinityScroll(event) {
     let mHeight = event.nativeEvent.layoutMeasurement.height;
@@ -70,22 +97,7 @@ const ChatMain = () => {
     if (Math.ceil(mHeight + Y) >= cSize) return true;
     return false;
   }
-
-  socketIO.on('gimrd', ({msgId}) => {
-    let newMessages = messages.map(item => {
-      if (msgId === item._id) {
-        return {
-          ...item,
-          readed: true,
-        };
-      } else {
-        return item;
-      }
-    });
-
-    setMessages(newMessages);
-  });
-
+  console.log(store.getState().message.AllMessages);
   return (
     <CMC
       ref={scrollViewRef}
@@ -100,9 +112,9 @@ const ChatMain = () => {
           setRead(true);
         }
       }}
-      onContentSizeChange={() =>
-        scrollViewRef.current.scrollToEnd({animated: true})
-      }>
+      onContentSizeChange={e => {
+        scrollViewRef.current.scrollToEnd({animated: true});
+      }}>
       {isLoading && (
         <ActivityIndicator
           style={{
@@ -115,7 +127,7 @@ const ChatMain = () => {
 
       {!isLoading && (
         <>
-          {messages.length === 0 && (
+          {store.getState().message.allMessages.length === 0 && (
             <EMC>
               <Icon
                 style={{position: 'absolute', top: '2%', left: '70%'}}
@@ -133,17 +145,33 @@ const ChatMain = () => {
             </EMC>
           )}
 
-          {messages.length > 0 &&
-            messages.map((item, index) => {
-              return (
-                <Message
-                  scrollInfo={scrollInfo}
-                  key={index * 89}
-                  avatarURI={partnerAvatar}
-                  {...item}
-                  read={read}
-                />
-              );
+          {store.getState().message.allMessages.length > 0 &&
+            store.getState().message.allMessages.map((item, index) => {
+              if (item.readed) {
+                return (
+                  <Message
+                    messageCount={1}
+                    scrollInfo={{offsetY: 0, screen: 0}}
+                    key={index * 89}
+                    avatarURI={partnerAvatar}
+                    {...item}
+                    read={false}
+                    messageCount={6}
+                  />
+                );
+              } else {
+                return (
+                  <Message
+                    messageCount={1}
+                    scrollInfo={scrollInfo}
+                    key={index * 85}
+                    avatarURI={partnerAvatar}
+                    {...item}
+                    read={read}
+                    messageCount={6}
+                  />
+                );
+              }
             })}
         </>
       )}

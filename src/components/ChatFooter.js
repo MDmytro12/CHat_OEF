@@ -7,12 +7,10 @@ import {useStore} from 'react-redux';
 import {encryptText} from '../utils/Encryption';
 import {useDispatch} from 'react-redux';
 import {
-  disableImgTyping,
-  enableImageTyping,
   sendMessageAudio,
   sendMessageDocument,
   sendMessageImg,
-  setMsgAudio,
+  sendNewMessage,
 } from '../actions/message';
 import {disableSubMenu, enableSubMenu, hideSubMenu} from '../actions/dialog';
 
@@ -23,6 +21,10 @@ const ChatFooter = ({}) => {
   const [isTyping, setIsTyping] = useState(false);
   const [msgText, setMsgText] = useState('');
   const [partnerName, setPartnerName] = useState('');
+
+  socketIO.on('giun', ({username}) => {
+    setPartnerName(username);
+  });
 
   socketIO.on('pt', ({userId}) => {
     if (userId !== store.getState().user.userId) {
@@ -57,7 +59,6 @@ const ChatFooter = ({}) => {
   };
 
   const onPressHandler = async () => {
-    console.log(store.getState().message);
     let et = await encryptText(msgText, store.getState().user.userId);
 
     let newMsg = {
@@ -75,7 +76,6 @@ const ChatFooter = ({}) => {
     };
 
     if ('uri' in store.getState().message.image) {
-      console.log('SEND IMAGE');
       dispatch(
         sendMessageImg(
           store.getState().message.image,
@@ -88,7 +88,6 @@ const ChatFooter = ({}) => {
     }
 
     if ('uri' in store.getState().message.document) {
-      console.log('SEND DOCUMENT');
       dispatch(
         sendMessageDocument(
           store.getState().message.document,
@@ -101,7 +100,6 @@ const ChatFooter = ({}) => {
     }
 
     if ('uri' in store.getState().message.audio) {
-      console.log('SEND AUDIO');
       dispatch(
         sendMessageAudio(
           store.getState().message.audio,
@@ -114,11 +112,10 @@ const ChatFooter = ({}) => {
     }
 
     if (msgText) {
-      socketIO.emit('gnm', newMsg);
+    socketIO.emit("sd" , {dialogId: store.getState().dialog.currentDialog})
+      socketIO.emit("gnm" , newMsg);
       setMsgText('');
     }
-
-    dispatch(disableImgTyping());
   };
 
   return (

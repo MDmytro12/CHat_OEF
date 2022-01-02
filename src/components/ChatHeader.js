@@ -23,10 +23,9 @@ const ChatHeader = ({onPress}) => {
   const [partnerAvatar, setPartnerAvatar] = useState(
     require('../assets/img/anonym.png'),
   );
+  console.log('CHAT HEADR');
 
   const [partnerLogout, setPartnerLogout] = useState(Date.now());
-
-  console.log('CHAT HEADR');
 
   useEffect(() => {
     async function fetchAvatar() {
@@ -48,7 +47,6 @@ const ChatHeader = ({onPress}) => {
   }, [store.getState().dialog.currentPartner]);
 
   socketIO.on('giuo', ({online}) => {
-    console.log('GET USER ONLINE');
     if (online !== onlinee) {
       setOnline(online);
     }

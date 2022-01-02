@@ -13,3 +13,6 @@ export const LINK_DELETE_DIALOF_BY_ID = `http://${IP}:${PORT}/api/dialog/ddbi`;
 export const LINK_SEND_IMAGE = `http://${IP}:${PORT}/api/msg/img`;
 export const LINK_SEND_DOCUMENT = `http://${IP}:${PORT}/api/msg/pdf`;
 export const LINK_SEND_AUDIO = `http://${IP}:${PORT}/api/msg/audio`;
+export const LINK_SET_MESSAGE_READED = `http://${IP}:${PORT}/api/msg/sr`;
+export const LINK_SEND_NEW_MESSAGE = `http://${IP}:${PORT}/api/msg/cn`;
+export const LINK_GET_ALL_MESSAGES = `http://${IP}:${PORT}/api/msg/gam`;

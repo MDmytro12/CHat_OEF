@@ -6,6 +6,7 @@ import {
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
   SEND_MESSAGE_IMAGE,
+  SET_ALL_MESSAGES,
   SET_MSG_AUDIO,
   SET_MSG_DOCUMENT,
   SET_MSG_IMAGE,
@@ -18,6 +19,7 @@ const initialState = {
   image: {},
   document: {},
   audio: {},
+  allMessages: [],
 };
 
 export const messageReducer = (state = initialState, {type, payload}) => {
@@ -66,6 +68,11 @@ export const messageReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         document: payload.document,
+      };
+    case SET_ALL_MESSAGES:
+      return {
+        ...state,
+        allMessages: payload.allMessages,
       };
     default:
       return state;

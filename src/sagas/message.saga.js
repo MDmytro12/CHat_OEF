@@ -1,24 +1,31 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
-import {call, put, takeEvery} from 'redux-saga/effects';
+import {call, put, select, takeEvery} from 'redux-saga/effects';
 import {
   disableAudioType,
   disableDocumentType,
   disableImgTyping,
+  setAllMessages,
   setMsgAudio,
   setMsgDocument,
   setMsgImage,
 } from '../actions/message';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
 import {
+  LINK_GET_ALL_MESSAGES,
   LINK_SEND_AUDIO,
   LINK_SEND_DOCUMENT,
   LINK_SEND_IMAGE,
+  LINK_SEND_NEW_MESSAGE,
+  LINK_SET_MESSAGE_READED,
 } from '../constants/links';
 import {
+  GET_ALL_MESSAGES,
   SEND_MESSAGE_AUDIO,
   SEND_MESSAGE_DOCUMENT,
   SEND_MESSAGE_IMAGE,
+  SEND_NEW_MESSAGE,
+  SET_MESSAGE_READED,
 } from '../constants/types';
 
 // send image
@@ -56,7 +63,6 @@ function* sendImageWorker({payload}) {
     yield put(disableImgTyping());
     yield put(setMsgImage({}));
   } catch (err) {
-    console.log('ERROR image : ', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',
@@ -100,7 +106,6 @@ function* sendDocumentWorker({payload}) {
     yield put(disableDocumentType());
     yield put(setMsgDocument({}));
   } catch (err) {
-    console.log('ERROR document', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',
@@ -144,7 +149,6 @@ function* sendAudioWorker({payload}) {
     yield put(disableAudioType());
     yield put(setMsgAudio({}));
   } catch (err) {
-    console.log('ERROR audio : ', err);
     Alert.alert('Помилка підключення!', ERROR_INTERNET_CONNECTION, [
       {
         text: 'Зрозуміло',
@@ -153,4 +157,66 @@ function* sendAudioWorker({payload}) {
   }
 }
 
-export {sendImageWatcher, sendAudioWatcher, sendDocumentWatcher};
+// msg readed
+
+const fetchReaded = ({dialogId, msgId}) =>
+  axios.post(LINK_SET_MESSAGE_READED, {dialogId, msgId});
+
+function* sendReadedWatcher() {
+  yield takeEvery(SET_MESSAGE_READED, sendReadedWorker);
+}
+
+function* sendReadedWorker({payload}) {
+  try {
+    yield call(() =>
+      fetchReaded({
+        msgId: payload.msgId,
+        dialogId: payload.dialogId,
+      }),
+    );
+  } catch (err) {}
+}
+
+// msg new
+
+const fetchNewMessage = ({newMsg}) =>
+  axios.post(LINK_SEND_NEW_MESSAGE, {newMsg}).catch(err => console.log(err));
+
+function* sendNewMessageWatcher() {
+  yield takeEvery(SEND_NEW_MESSAGE, sendNewMessageWorker);
+}
+
+function* sendNewMessageWorker({payload}) {
+  try {
+    let n = yield call(() => fetchNewMessage(payload));
+    console.log("RESULT NEW :  " , n );
+  } catch (err) {
+  	console.log(" ERROR RESULT :  " , err)
+  } 	
+}
+
+// msg all get messages
+
+const fetchGetAllMessages = ({dialogId}) =>
+  axios.post(LINK_GET_ALL_MESSAGES, {dialogId}).catch(err => console.log(err));
+
+function* sendGetAllMessagesWatcher() {
+  yield takeEvery(GET_ALL_MESSAGES, sendGetAllMessagesWorker);
+}
+
+function* sendGetAllMessagesWorker({payload}) {
+  try {
+    const allMsgs = yield call(() => fetchGetAllMessages(payload));
+
+    yield put(setAllMessages(allMsgs.data.allMessages));
+  } catch (err) {}
+}
+
+export {
+  sendImageWatcher,
+  sendAudioWatcher,
+  sendDocumentWatcher,
+  sendReadedWatcher,
+  sendNewMessageWatcher,
+  sendGetAllMessagesWatcher,
+};

@@ -5,14 +5,14 @@ import {
   dateColor,
   meBackColor,
   notMeBackColor,
+  onlineColor,
 } from '../constants/style';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MessageAudio, MessageDocument, MessageImage} from '.';
 import {useDispatch, useStore} from 'react-redux';
 import {formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
 import {decryptText} from '../utils/Encryption';
-import InView from 'react-native-component-inview';
 
 const Message = ({
   _id,
@@ -29,17 +29,20 @@ const Message = ({
   sendedAt,
   scrollInfo,
   read,
+  messageCount,
+  dialogId,
 }) => {
   const store = useStore();
+  const dispatch = useDispatch();
 
   const isMe = authorId._id === store.getState().user.userId;
-  const secret = isMe ? authorId._id : store.getState().user.userId;
   const [oY, setOy] = useState(0);
   const [decryptedText, setDecryptedText] = React.useState('');
+  const socketIO = store.getState().socketIO.socketIO;
 
   React.useEffect(() => {
     async function dT() {
-      let dText = await decryptText(textContent, secret);
+      let dText = await decryptText(textContent, authorId._id);
       setDecryptedText(dText);
     }
 
@@ -47,23 +50,22 @@ const Message = ({
   }, []);
 
   React.useEffect(() => {
-    if (
-      scrollInfo.height !== 0 &&
-      scrollInfo.offsetY !== 0 &&
-      readed === false &&
-      read
-    ) {
+    if (read && !readed && authorId._id !== store.getState().user.userId) {
       if (
-        (scrollInfo.offsetY + 20 < oY &&
-          oY < scrollInfo.offsetY + scrollInfo.screen - 10) ||
-        scrollInfo.offsetY < scrollInfo.screen
+        scrollInfo.offsetY + 10 < oY &&
+        oY < scrollInfo.offsetY + scrollInfo.screen &&
+        !readed
       ) {
-        console.log('SEND!', _id);
-        store.getState().socketIO.socketIO.emit('smrd', {
-          dialogId: store.getState().dialog.currentDialog,
-          msgId: _id,
-        });
+        socketIO.emit('smrd', {msgId: _id, dialogId});
       }
+    }
+    if (
+      messageCount <= 3 &&
+      !readed &&
+      authorId._id !== store.getState().user.userId
+    ) {
+      // dispatch(setMessageReaded(_id, dialogId));
+      socketIO.emit('smrd', {msgId: _id, dialogId});
     }
   }, [scrollInfo]);
 
@@ -73,8 +75,8 @@ const Message = ({
         setOy(nativeEvent.layout.y);
       }}
       isMe={isMe}>
-      <MTC isMe={isMe}>
-        {textContent.length !== 0 && <MT>{decryptedText}</MT>}
+      <MTC isMe={isMe} readed={readed}>
+        {textContent.length !== 0 && <MT readed={readed}>{decryptedText}</MT>}
         {isImage &&
           imageContent.map((item, index) => (
             <MessageImage
@@ -96,9 +98,9 @@ const Message = ({
       <ILC>
         <IRC isMe={isMe}>
           {readed === false ? (
-            <Icon name="done" size={25} color="black" />
+            <Icon name="eye-off-outline" size={25} color="black" />
           ) : (
-            <Icon name="done-all" size={25} color="black" />
+            <Icon name="eye" size={25} color="black" />
           )}
         </IRC>
         {!isMe && (
@@ -162,6 +164,7 @@ const MTC = styled.View`
   position: relative;
   margin-bottom: 10px;
   margin-left: 60px;
+  ${({readed}) => (!readed ? 'background-color: rgba(45,42,62,.9);' : '')}
   ${({isMe}) =>
     isMe
       ? 'border-bottom-right-radius : 0px;'
@@ -169,11 +172,14 @@ const MTC = styled.View`
 `;
 
 const MT = styled.Text`
-  color: rgba(0, 0, 0, 0.56);
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 1px;
   margin-bottom: 10px;
+  color: ${({readed}) =>
+    !readed
+      ? 'white ; font-weight: 800; letter-spacing: 2px; '
+      : 'rgba(0, 0, 0, 0.56)'};
 `;
 
 const MC = styled.View`

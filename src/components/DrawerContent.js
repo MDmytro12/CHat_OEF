@@ -45,17 +45,17 @@ const DrawerContent = ({props: {navigation}}) => {
       itemName: 'Покинути чат',
       iconName: 'exit-to-app',
       onPress: () => {
-        // store.getState().socketIO.socketIO.emit('suof', {
-        //   userId: store.getState().user.userId,
-        // });
-        // store.getState().socketIO.socketIO.emit('sulu', {
-        //   logoutAt: new window.Date(),
-        //   userId: store.getState().user.userId,
-        // });
-        // dispatch(userExit());
-        // navigation.navigate('Login');
+         store.getState().socketIO.socketIO.emit('suof', {
+           userId: store.getState().user.userId,
+         });
+        store.getState().socketIO.socketIO.emit('sulu', {
+          logoutAt: new window.Date(),
+          userId: store.getState().user.userId,
+         });
+         dispatch(userExit());
+        navigation.navigate('Login');
 
-        store.getState().socketIO.socketIO.emit('dams');
+        //store.getState().socketIO.socketIO.emit('dams');
       },
     },
   ];

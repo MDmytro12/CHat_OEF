@@ -5,9 +5,13 @@ import {
   ENABLE_AUDIO_TYPE,
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
+  GET_ALL_MESSAGES,
   SEND_MESSAGE_AUDIO,
   SEND_MESSAGE_DOCUMENT,
   SEND_MESSAGE_IMAGE,
+  SEND_NEW_MESSAGE,
+  SET_ALL_MESSAGES,
+  SET_MESSAGE_READED,
   SET_MSG_AUDIO,
   SET_MSG_DOCUMENT,
   SET_MSG_IMAGE,
@@ -89,4 +93,24 @@ export const setMsgDocument = document => ({
   payload: {
     document,
   },
+});
+
+export const setMessageReaded = (msgId, dialogId) => ({
+  type: SET_MESSAGE_READED,
+  payload: {msgId, dialogId},
+});
+
+export const sendNewMessage = newMsg => ({
+  type: SEND_NEW_MESSAGE,
+  payload: {newMsg},
+});
+
+export const setAllMessages = allMessages => ({
+  type: SET_ALL_MESSAGES,
+  payload: {allMessages},
+});
+
+export const getAllMessages = dialogId => ({
+  type: GET_ALL_MESSAGES,
+  payload: {dialogId},
 });

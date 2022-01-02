@@ -5,14 +5,13 @@ import styled from 'styled-components';
 import {ERROR_INTERNET_CONNECTION} from '../constants/error';
 import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {borderColor, colorFont, dateColor} from '../constants/style';
-import {detectPartnerId} from '../utils/detecionUtil';
 import Avatar from './Avatar';
-import {format, formatDistance} from 'date-fns';
+import {formatDistance} from 'date-fns';
 import {uk} from 'date-fns/locale';
 import {decryptText} from '../utils/Encryption';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {View} from 'react-native';
 import {ContentFile} from '.';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DialogItem = ({dialogItemInfo, onPress}) => {
   const store = useStore();
@@ -59,8 +58,18 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
     getPartnerAvatar();
   }, []);
 
+  const readed =
+    msg.authorId !== store.getState().user.userId ? msg.readed : true;
+
   return (
-    <DIContainer readed={msg.isReaded} onPress={onPress}>
+    <DIContainer readed={readed} onPress={onPress}>
+      <ReadedContainer>
+        {!readed ? (
+          <Icon name="eye-off-outline" size={25} color="black" />
+        ) : (
+          <Icon name="eye" size={25} color="black" />
+        )}
+      </ReadedContainer>
       <DContainer>
         <Date>
           {formatDistance(new window.Date(msg.sendedAt), window.Date.now(), {
@@ -94,6 +103,12 @@ const DialogItem = ({dialogItemInfo, onPress}) => {
     </DIContainer>
   );
 };
+
+const ReadedContainer = styled.View`
+  position: absolute;
+  right: 5%;
+  top: 10%;
+`;
 
 const Date = styled.Text`
   color: ${dateColor};
