@@ -2,10 +2,22 @@ import React from 'react';
 import styled from 'styled-components';
 import {colorFont} from '../constants/style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useStore} from 'react-redux';
+import {toggleDocument} from '../actions/message';
 
 const MessageDocument = ({name}) => {
+  const navigation = useNavigation();
+
+  const store = useStore();
+  const dispatch = useDispatch();
+
+  const onPDFView = () => {
+    dispatch(toggleDocument(store.getState().message.toggled));
+    navigation.navigate('PDFView', {uri: name});
+  };
   return (
-    <MDW>
+    <MDW onPress={onPDFView}>
       <MDC>
         <IC>
           <Icon name="description" size={25} color="white" />

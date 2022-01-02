@@ -23,7 +23,6 @@ const ChatHeader = ({onPress}) => {
   const [partnerAvatar, setPartnerAvatar] = useState(
     require('../assets/img/anonym.png'),
   );
-  console.log('CHAT HEADR');
 
   const [partnerLogout, setPartnerLogout] = useState(Date.now());
 

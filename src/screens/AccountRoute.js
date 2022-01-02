@@ -13,6 +13,7 @@ import {setSocketIo} from '../actions/socket';
 import SettingUserScreen from './UserInfoScreen';
 import ChangeScreen from './ChangeScreen';
 import ImageViewScreen from './ImageViewScreen';
+import PDFViewScreen from './PDFViewScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -59,6 +60,7 @@ const AccountRoute = () => {
       <Drawer.Screen name="Setting" component={SettingUserScreen} />
       <Drawer.Screen name="ChangeInfo" component={ChangeScreen} />
       <Drawer.Screen name="ImageView" component={ImageViewScreen} />
+      <Drawer.Screen name="PDFView" component={PDFViewScreen} />
     </Drawer.Navigator>
   );
 };

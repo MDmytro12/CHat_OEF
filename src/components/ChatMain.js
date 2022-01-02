@@ -11,7 +11,6 @@ import {LINK_GET_USER_AVATAR} from '../constants/links';
 import {getAllMessages, setAllMessages} from '../actions/message';
 
 const ChatMain = () => {
-  console.log('CHAT MAIN');
   const scrollViewRef = useRef();
   const store = useStore();
   const dispatch = useDispatch();
@@ -97,7 +96,6 @@ const ChatMain = () => {
     if (Math.ceil(mHeight + Y) >= cSize) return true;
     return false;
   }
-  console.log(store.getState().message.AllMessages);
   return (
     <CMC
       ref={scrollViewRef}

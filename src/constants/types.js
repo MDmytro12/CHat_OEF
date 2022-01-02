@@ -83,3 +83,4 @@ export const SET_MSG_DOCUMENT = 'SET_MSG_DOCUMENT';
 export const SET_MSG_AUDIO = 'SET_MSG_AUDIO';
 
 export const IMAGE_TOGGLE = 'IMAGE_TOGGLE';
+export const DOCUMENT_TOGGLE = 'DOCUMENT_TOGGLE';

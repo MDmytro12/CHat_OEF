@@ -2,6 +2,7 @@ import {
   DISABLE_AUDIO_TYPE,
   DISABLE_DOCUMENT_TYPE,
   DISABLE_IMAGE_TYPE,
+  DOCUMENT_TOGGLE,
   ENABLE_AUDIO_TYPE,
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
@@ -117,3 +118,8 @@ export const getAllMessages = dialogId => ({
 });
 
 export const toggleImage = toggle => ({type: IMAGE_TOGGLE, payload: toggle});
+
+export const toggleDocument = toggle => ({
+  type: DOCUMENT_TOGGLE,
+  payload: toggle,
+});

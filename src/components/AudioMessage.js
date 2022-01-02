@@ -47,11 +47,10 @@ const MessageAudio = ({name}) => {
           sound.getCurrentTime(currentTime =>
             setWidth((currentTime / sound.getDuration()) * 100),
           );
-          console.log('INTERVAL');
         }, 1000);
 
         setInt(playInterval);
-
+        sound.setVolume(1);
         sound.play(success => {
           if (success) {
             clearInterval(playInterval);
@@ -59,7 +58,6 @@ const MessageAudio = ({name}) => {
             setWidth(0);
           }
         });
-        sound.setVolume(1);
       });
     }
   };

@@ -2,6 +2,7 @@ import {
   DISABLE_AUDIO_TYPE,
   DISABLE_DOCUMENT_TYPE,
   DISABLE_IMAGE_TYPE,
+  DOCUMENT_TOGGLE,
   ENABLE_AUDIO_TYPE,
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
@@ -22,6 +23,7 @@ const initialState = {
   audio: {},
   allMessages: [],
   toggle: false,
+  toggled: false,
 };
 
 export const messageReducer = (state = initialState, {type, payload}) => {
@@ -80,6 +82,11 @@ export const messageReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         toggle: !payload,
+      };
+    case DOCUMENT_TOGGLE:
+      return {
+        ...state,
+        toggled: !payload,
       };
     default:
       return state;

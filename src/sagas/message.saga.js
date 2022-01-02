@@ -189,10 +189,7 @@ function* sendNewMessageWatcher() {
 function* sendNewMessageWorker({payload}) {
   try {
     let n = yield call(() => fetchNewMessage(payload));
-    console.log("RESULT NEW :  " , n );
-  } catch (err) {
-  	console.log(" ERROR RESULT :  " , err)
-  } 	
+  } catch (err) {}
 }
 
 // msg all get messages

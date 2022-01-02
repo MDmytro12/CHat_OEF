@@ -5,3 +5,4 @@ export const ERROR_DIALOG_ALREADY_EXISTS =
   'Діалог з даним користувачем вже існує!';
 
 export const ERROR_AUDIO = 'Сталася помилка при відтворенні файлу!';
+export const ERROR_DOCUMENT = 'Сталася помилка при відтворенні pdf-документу!';
