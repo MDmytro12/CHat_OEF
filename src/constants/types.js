@@ -81,3 +81,5 @@ export const ENABLE_SUB_MENU = 'ENABLE_SUB_MENU';
 export const SET_MSG_IMAGE = 'SET_MSG_IMAGE';
 export const SET_MSG_DOCUMENT = 'SET_MSG_DOCUMENT';
 export const SET_MSG_AUDIO = 'SET_MSG_AUDIO';
+
+export const IMAGE_TOGGLE = 'IMAGE_TOGGLE';

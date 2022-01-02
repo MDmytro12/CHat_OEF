@@ -5,6 +5,7 @@ import {
   ENABLE_AUDIO_TYPE,
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
+  IMAGE_TOGGLE,
   SEND_MESSAGE_IMAGE,
   SET_ALL_MESSAGES,
   SET_MSG_AUDIO,
@@ -20,6 +21,7 @@ const initialState = {
   document: {},
   audio: {},
   allMessages: [],
+  toggle: false,
 };
 
 export const messageReducer = (state = initialState, {type, payload}) => {
@@ -73,6 +75,11 @@ export const messageReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         allMessages: payload.allMessages,
+      };
+    case IMAGE_TOGGLE:
+      return {
+        ...state,
+        toggle: !payload,
       };
     default:
       return state;

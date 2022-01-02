@@ -12,6 +12,7 @@ import {LINK_SOCKET_IO} from '../constants/links';
 import {setSocketIo} from '../actions/socket';
 import SettingUserScreen from './UserInfoScreen';
 import ChangeScreen from './ChangeScreen';
+import ImageViewScreen from './ImageViewScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -57,6 +58,7 @@ const AccountRoute = () => {
       <Drawer.Screen name="FindUser" component={FindUserScreen} />
       <Drawer.Screen name="Setting" component={SettingUserScreen} />
       <Drawer.Screen name="ChangeInfo" component={ChangeScreen} />
+      <Drawer.Screen name="ImageView" component={ImageViewScreen} />
     </Drawer.Navigator>
   );
 };

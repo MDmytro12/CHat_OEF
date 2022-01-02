@@ -6,6 +6,7 @@ import {
   ENABLE_DOCUMENT_TYPE,
   ENABLE_IMAGE_TYPE,
   GET_ALL_MESSAGES,
+  IMAGE_TOGGLE,
   SEND_MESSAGE_AUDIO,
   SEND_MESSAGE_DOCUMENT,
   SEND_MESSAGE_IMAGE,
@@ -114,3 +115,5 @@ export const getAllMessages = dialogId => ({
   type: GET_ALL_MESSAGES,
   payload: {dialogId},
 });
+
+export const toggleImage = toggle => ({type: IMAGE_TOGGLE, payload: toggle});

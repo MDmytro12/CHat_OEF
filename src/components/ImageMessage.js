@@ -1,9 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useStore} from 'react-redux';
+import {toggleImage} from '../actions/message';
 
 const MessageImage = ({image, first, last}) => {
+  const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+  const store = useStore();
+
+  const onImagePress = () => {
+    dispatch(toggleImage(store.getState().message.toggle));
+    navigation.navigate('ImageView', {
+      image,
+    });
+  };
   return (
-    <MIW>
+    <MIW onPress={onImagePress}>
       <MIC>
         <I first={first} last={last} source={image} />
       </MIC>
